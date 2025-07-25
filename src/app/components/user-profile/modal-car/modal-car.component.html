@@ -1,0 +1,110 @@
+<button type="button" data-bs-toggle="modal" [attr.data-bs-target]="'#carInfoModal-'+subscription.ccontratoflota" class="button-check-info" mat-raised-button>
+  <small>Ver datos de la Membresía N° {{subscription.ccontratoflota}}</small>
+</button>
+<div class="modal fade" [id]="'carInfoModal-'+subscription.ccontratoflota" tabindex="-1" [attr.aria-labelledby]="'carInfoModalLabel_'+subscription.ccontratoflota" aria-hidden="true">
+  <div class="modal-dialog" style="max-width: 800px !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" [id]="'carInfoModalLabel_'+subscription.ccontratoflota">Datos de la Membresía</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div *ngIf="subscription" class="modal-body">
+        <div class="card">
+          <div class="card-header">Plan</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Nombre</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xplan">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Compañía</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xcompania">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Pago</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xmetodologiapago">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Costo</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.mcosto">
+                  <span matSuffix>$</span>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Estatus de la Membresía</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xestatusgeneral">
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Fecha de Inicio</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xfdesde">
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Fecha de Culminación</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xfhasta">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">Datos del Vehículo</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Marca</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xmarca">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Modelo</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xmodelo">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Version</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xversion">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Placa</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xplaca">
+                </mat-form-field>
+              </div>
+              <div class="col-md-2">
+                <mat-form-field class="user-form-field text-black-disabled" >
+                  <mat-label>Color</mat-label>
+                  <input matInput style="text-transform: capitalize;" disabled placeholder="Ingresa datos" #input [value]="subscription.xcolor">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" (click)="openPdf()" class="ml-2 btn btn-primary">
+          Descargar Certificado
+          <i class="ml-2 fa-solid fa-file"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

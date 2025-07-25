@@ -1,0 +1,21 @@
+
+<div class="logo">
+    <!-- <a [routerLink]="url" class="simple-text logo-mini">
+      <div class="logo-img">
+        <img src="./assets/img/arys.png"/>
+      </div>
+    </a> -->
+    <a [routerLink]="url" class="simple-text logo-normal">
+      <img style="margin: 0px 25px;" width="40" src="./assets/img/arys.png"/>
+    </a>
+</div>
+<div class="sidebar-wrapper">
+  <ul class="nav">
+    <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class=" nav-item">
+      <a [routerLink]="[menuItem.xruta]">
+        <i class="{{menuItem.xicono}}"></i>
+        <p>{{menuItem.xmodulo}}</p>
+      </a>
+    </li>
+  </ul>
+</div>

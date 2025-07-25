@@ -1,0 +1,43 @@
+<title>Login</title>
+
+<body class="sign-in-basic">
+    <div class="page-header align-items-center min-vh-100" style="background-image: url('../../../assets/img/Fondo\ de\ Sign\ In\ -\ ArysAuto.jpg');" loading="lazy">
+      <span class="mask  opacity-6"></span>
+      <div class="container p-4 mt-6">
+        <div class="row">
+          <form role="form" class="col-lg-4 col-md-8 col-12 mx-auto" style="text-align: center;" id="form-login" name="login" [formGroup]="SingIn" (ngSubmit)="onSubmit()">
+            <img class="w-65 p-3" src="../../../assets/img/arys.png">
+            <div class="card z-index-0 fadeIn3 fadeInBottom mb-3" style="background-color: #e5e2e2">
+              <div class="card-header p-0 position-relative" style="background-color: transparent;">
+                <div class="btn bg-black w-100 brb-0 d-flex align-items-center justify-content-center py-4" style="background-color: transparent; cursor: default !important;">
+                  <span style="font-size: 20px;" class="text-white font-weight-bolder text-center my-0">INICIA SESIÓN</span>
+                </div>
+              </div>
+              <div class="card-body p-4">
+                <div class="text-start">
+                  <div class="input-group input-group-outline my-3">
+                    <input [(ngModel)]="xlogin" placeholder="Introducir Correo" type="email" name="xlogin" class="form-control log-inp" [class]="{ 'is-invalid' : submitted }">
+                    <div *ngIf="submitted" class="invalid-feedback">
+                      <div *ngIf="submitted">Correo requerido</div>
+                    </div>
+                  </div>
+                  <div class="input-group input-group-outline mb-3">
+                    <input [(ngModel)]="xcontrasena" placeholder="Introducir Contraseña" type="password" name="xcontrasena" class="form-control log-inp" [class]="{ 'is-invalid' : submitted }">
+                    <div *ngIf="submitted" class="invalid-feedback">
+                      <div *ngIf="submitted">Contraseña errada</div>
+                    </div>               
+                   </div>
+                  
+                  </div>
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary w-100 mb-0 brt-0 d-flex align-items-center justify-content-center">
+                  <span style="font-size: 14px;" class="text-white font-weight-bolder text-center my-0">Continuar</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body> 

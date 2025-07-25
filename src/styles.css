@@ -1,0 +1,191 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@flaticon/flaticon-uicons/css/all/all.css';
+:root {
+  --yellow: #fcb203 !important;
+}
+
+.logocompany-system{
+  background: url("./assets/img/ArysAuto_Logo.png") no-repeat;
+  background-size: contain;
+  padding: 83px;
+  margin-top: 9px;
+  margin-bottom: 10px;
+}
+
+.mat-step-header .mat-step-icon-selected,.mat-step-header .mat-step-icon-state-done,.mat-step-header .mat-step-icon-state-edit {
+  background-color: #fcb203;
+  color: #fff
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+font-size: 14px;
+width: 100%;
+}
+
+td, th {
+/* width: 25%; */
+}
+
+.shadow {
+box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.hr {
+  background: black;
+}
+.mat-input-element:disabled,.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix:after {
+  color: #000000a3;
+}
+.bg-primary:hover {
+  background-color: #b59d32 !important;
+}
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.cdk-overlay-pane {
+  position: absolute;
+  pointer-events: auto;
+  box-sizing: border-box;
+  z-index: 1052 !important;
+  display: flex;
+  max-width: 100%;
+  max-height: 90vh;
+  height: auto !important;
+}
+
+.cdk-overlay-connected-position-bounding-box {
+  position: absolute;
+  z-index: 1052 !important;
+  display: flex;
+  flex-direction: column;
+  min-width: 1px;
+  min-height: 1px;
+}
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 1052;
+}
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: #fdd831;
+  border-color: #fdd831
+}
+
+.square-green > div > .mat-progress-bar-fill::after{
+  background-color: rgb(36, 173, 36);
+}
+.square-yellow > div > .mat-progress-bar-fill::after{
+  background-color: rgb(255, 240, 30);
+}
+.square-red > div > .mat-progress-bar-fill::after{
+  background-color: rgb(212, 12, 12);
+}
+
+.date-picker-asd > .mat-form-field-wrapper > .mat-form-field-flex > .mat-form-field-infix {
+  padding-top: 1.25rem;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: none !important;
+    height: 100%;
+    width: 100%;
+    margin: 0px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-content {
+    width: 80% !important;
+  }
+}
+
+.thumbnail_pdf > .ng2-pdf-viewer-container {
+  overflow: hidden !important;
+  position: relative;
+}
+.thumb-border{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 7px #757575 solid;
+  border-radius: 5px;
+  border-bottom: 25px solid #757575;
+  z-index: 10;
+}
+.expansion_notificacion > .mat-expansion-panel {
+  margin-bottom: 1rem !important;
+}
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
+}
+.fade-check {
+  transition: all 0.3s ease-in-out;
+}
+.table_warn {
+  background-color: #ffc5003b;
+}
+.dropdown-menu-end:before {
+  right: 10px !important;
+  left: auto !important;
+}
+.mins-input >.mat-form-field-wrapper > .mat-form-field-flex {
+  margin-bottom: 5px;
+  align-items: flex-end !important;
+}
+.mins-input >.mat-form-field-wrapper > .mat-form-field-flex > .mat-form-field-prefix {
+  display: flex !important;
+  padding-right: 5px;
+  padding-bottom: 3px;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+  background-color: #ffca0082;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: #fcb203;
+}
+
+.btn-primary-fab {
+  background-color: #d6af00 !important;
+  transition: all 300ms ease 0ms;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+.mat-button-wrapper {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-contracts-notifications > tbody > tr{
+cursor: pointer;
+}
+.table-contracts-notifications > tbody > tr:hover{
+  background: #d3d3d3;
+}
+
+
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css"
+
+
+

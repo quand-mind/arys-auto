@@ -1,0 +1,2146 @@
+<div class="panel-header">
+    <div class="header text-center">
+      <h2 class="title">{{title}}</h2>
+  
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h4 class="card-title"> Notificaciones</h4>
+          </div>
+          <div class="card-body">
+            <div class="hourglassBackground" *ngIf="loading">
+              <div class="hourglassContainer">
+                <div class="hourglassCurves"></div>
+                <div class="hourglassCapTop"></div>
+                <div class="hourglassGlassTop"></div>
+                <div class="hourglassSand"></div>
+                <div class="hourglassSandStream"></div>
+                <div class="hourglassCapBottom"></div>
+                <div class="hourglassGlass"></div>
+              </div>
+            </div>
+
+            <h4 class="text-center" *ngIf="!information && !loading && this.mode == 'create'">
+                Estimado usuario, para la creación de la notificación, por favor, busque el vehículo con estatus Cobrado para prestar servicio
+            </h4>
+            <div class="table-responsive" *ngIf="(!information && !loading) && this.mode == 'create'">
+                <form>
+                    <mat-form-field>
+                      <mat-label>Buscar</mat-label>
+                      <input matInput (keyup)="applyFilter($event)" placeholder="Ingresa datos" #input>
+                    </mat-form-field>
+                          
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-contracts-notifications" matSort>
+                      <!-- Columna Cramo -->
+                      <ng-container matColumnDef="ccontratoflota">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Contrato </th>
+                          <td mat-cell *matCellDef="let element"> {{ element.ccontratoflota }} </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="xnombre">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                          <td mat-cell *matCellDef="let element"> {{ element.xnombre }} </td>
+                        </ng-container>
+              
+                        <ng-container matColumnDef="xvehiculo">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Vehiculo </th>
+                          <td mat-cell *matCellDef="let element"> {{ element.xvehiculo }} </td>
+                        </ng-container>
+              
+                        <ng-container matColumnDef="xplaca">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Placa </th>
+                          <td mat-cell *matCellDef="let element"> {{ element.xplaca }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="xestatusgeneral">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.xestatusgeneral }} </td>
+                        </ng-container>
+                        
+                          
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="handleRowClick(row.ccontratoflota)"></tr>
+                          
+                      <!-- Fila que se muestra cuando no hay datos coincidentes. -->
+                      <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="2">No hay datos</td>
+                      </tr>
+                    </table>
+                          
+                    
+                  </form>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="changeDataPage($event)" aria-label="Seleccionar página de Contratos"></mat-paginator>
+                  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Seleccionar página de Contratos"></mat-paginator> -->
+            </div>
+
+            <mat-stepper orientation="vertical" [linear]="isLinear" #stepper *ngIf="(information || this.mode == 'update') && (!loading)">
+              <mat-step [stepControl]="vehicleFormGroup">
+                <form [formGroup]="vehicleFormGroup">
+                  <ng-template matStepLabel>Información del Vehículo</ng-template>
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Marca</mat-label>
+                              <input matInput formControlName="xmarca" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Modelo</mat-label>
+                              <input matInput formControlName="xmodelo" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Version</mat-label>
+                              <input matInput formControlName="xversion" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Año</mat-label>
+                              <input matInput formControlName="fano" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Placa</mat-label>
+                              <input matInput formControlName="xplaca" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Color</mat-label>
+                              <input matInput formControlName="xcolor" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Serial de Carrocería</mat-label>
+                              <input matInput formControlName="xserialcarroceria" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Serial Motor</mat-label>
+                              <input matInput formControlName="xserialmotor" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Tipo de Vehículo</mat-label>
+                            <input matInput formControlName="xtipo" [disabled]="mode == 'update'">
+                        </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center py-5">
+                    <div class="col-12 col-md-2">
+                      <button class="w-100" matStepperNext mat-button style="background: #fcb203;">Continuar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="contractFormGroup">
+                <form [formGroup]="contractFormGroup">
+                  <ng-template matStepLabel>Información Del Afiliado</ng-template>
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Propietario</mat-label>
+                              <input matInput formControlName="xpropietario" [disabled]="mode == 'update'">
+                            </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Cédula</mat-label>
+                              <input matInput formControlName="xcedula" [disabled]="mode == 'update'">
+                            </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Teléfono</mat-label>
+                              <input matInput formControlName="xtelefono" [disabled]="mode == 'update'">
+                            </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Correo Electrónico</mat-label>
+                              <input matInput type="email" formControlName="xcorreo" [disabled]="mode == 'update'">
+                            </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Dirección</mat-label>
+                            <textarea [disabled]="mode == 'update'" matInput formControlName="xdireccion"></textarea>
+                          </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-4 " >
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Fecha Desde</mat-label>
+                          <input matInput [matDatepicker]="picker" formControlName="fdesde" [matDatepickerInput]="myDatepickerParser" [disabled]="mode == 'update'">
+                          <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="mode == 'update'"></mat-datepicker-toggle>
+                          <mat-datepicker #picker dateFormat="DD/MM/YYYY" [disabled]="mode == 'update'"></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-4 " >
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Fecha Hasta</mat-label>
+                            <input matInput [matDatepicker]="hasta" formControlName="fhasta" [disabled]="mode == 'update'">
+                            <mat-datepicker-toggle matSuffix [for]="hasta" ></mat-datepicker-toggle>
+                            <mat-datepicker #hasta></mat-datepicker>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-4">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Estatus</mat-label>
+                            <input matInput formControlName="xestatusgeneral" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                    <div class="col-6 col-md-2">
+                      <button class="w-100" matStepperNext mat-button style="background: #fcb203;">Continuar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="claimFormGroup">
+                <ng-template matStepLabel>Información de la Notificación</ng-template>
+                <form [formGroup]="claimFormGroup">
+                  <div class="notification-container">
+                    <div class="notification-content">
+                        <h1 class="notification-title">Notificación</h1>
+                        <mat-icon class="notification-icon">feedback</mat-icon>
+                    </div>
+                  </div>
+                  
+                  <hr class="black-hr">
+
+                  <div class="row justify-content-center py-3">
+                    <div class="col-12 col-md-6">
+                      <div class="row justify-content-center py-3">
+
+                        <div class="col-6">
+                          <mat-form-field class="example-full-width" >
+                            <mat-label>Tipo de Evento</mat-label>
+                            <input type="text"
+                              placeholder="Seleccione Tipo de Notificación"
+                              aria-label="Seleccione"
+                              matInput
+                              [formControl]="notificationTypeControl"
+                              [matAutocomplete]="type"                                      
+                              required
+                              [disabled]="mode == 'update'"
+                              >
+                              <mat-autocomplete #type="matAutocomplete" (optionSelected)="onNotificationTypeSelection($event)">
+                                <mat-option *ngFor="let type of filteredNotificationType | async" [value]="type">
+                                  {{ type }}
+                                </mat-option>
+                              </mat-autocomplete>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                          <mat-form-field class="example-full-width" >
+                            <mat-label>Causa de la Notificación</mat-label>
+                            <input type="text"
+                              placeholder="Causa de la Notificación"
+                              aria-label="Seleccione"
+                              matInput
+                              [formControl]="claimCauseControl"
+                              [matAutocomplete]="claim"
+                              required
+                              [disabled]="mode == 'update'">
+                              <mat-autocomplete #claim="matAutocomplete" (optionSelected)="onClaimCauseSelection($event)">
+                                <mat-option *ngFor="let claim of filteredClaimCause | async" [value]="claim">
+                                  {{ claim }}
+                                </mat-option>
+                              </mat-autocomplete>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-8">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Nombre Y Apellido</mat-label>
+                            <input matInput formControlName="xnombrecompleto" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Teléfono</mat-label>
+                            <input matInput formControlName="xtelefonosiniestro" [disabled]="mode == 'update'">
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="row justify-content-center py-3" style="row-gap: 20px;">
+                        <div class="col-sm-6 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿El vehículo sufrió algún daño?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle  formControlName="bdano" [disabled]="mode == 'update'"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-6 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿El vehículo puede transitar?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle formControlName="btransitar" [disabled]="mode == 'update'"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-6 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿Hubo algún lesionado?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle formControlName="blesionado" [disabled]="mode == 'update'"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-12 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿Transito estuvo involucrado?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle [disabled]="mode == 'update'" formControlName="btransito"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-12 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿El vehículo tenía cargamento?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle [disabled]="mode == 'update'" formControlName="bcarga"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-12 col-md-4 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿El vehículo tenía pasajeros?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle [disabled]="mode == 'update'" formControlName="bpasajero"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-12 col-md-6 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿Su vehículo le ocasionó daño a otro vehículo u objeto?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle formControlName="bdanootro" [disabled]="mode == 'update'"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                        <div class="col-sm-12 col-md-6 text-center example-full-width">
+                          <section class="d-inline">
+                            <h5>¿El propietario del vehículo estaba manejando?</h5>
+                            <span class="damage-option">
+                              <span>No</span>
+                              <mat-slide-toggle formControlName="bpropietario" [disabled]="mode == 'update'"></mat-slide-toggle>
+                              <span>Si</span>
+                          </span>
+                          </section>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="notification-container">
+                    <div class="notification-content">
+                        <h1 class="notification-title">Evento</h1>
+                        <mat-icon style="height: fit-content; width: fit-content;" class="notification-icon">local_car_wash</mat-icon>
+                    </div>
+                  </div>
+                  
+                  <hr class="black-hr">
+
+                  <div class="row justify-content-center py-3">
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-sm-12 col-md-6 text-center ">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Día del Evento</mat-label>
+                            <input
+                              matInput
+                              [disabled]="mode == 'update'"
+                              [matDatepicker]="fevento"
+                              formControlName="fevento"
+                            >
+                            <mat-datepicker-toggle matSuffix [for]="fevento"></mat-datepicker-toggle>
+                            <mat-datepicker #fevento></mat-datepicker>
+                          </mat-form-field>
+                        </div> 
+                        <div class="col-sm-12 col-md-6 text-center example-full-width">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Hora del Evento</mat-label>
+                            <input
+                              matInput
+                              [disabled]="mode == 'update'"
+                              type="time"
+                              [matTimepicker]="picker"
+                              formControlName="hevento"
+                            >
+                            <mat-timepicker #picker></mat-timepicker>
+                          </mat-form-field>
+                        </div> 
+                        <div class="col-sm-12 col-md-6 text-center ">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Estado</mat-label>
+                            <input type="text"
+                              matInput
+                              [formControl]="stateControl"
+                              [matAutocomplete]="state"
+                              formControlName="xestado"
+                              [disabled]="mode == 'update'"
+                              >
+                              <mat-autocomplete #state="matAutocomplete" (optionSelected)="onStateSelection($event)">
+                              <mat-option *ngFor="let state of filteredState | async" [value]="state">
+                                {{ state }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </div> 
+                        <div class="col-sm-12 col-md-6 text-center example-full-width">
+                          <mat-form-field class="example-full-width" >
+                            <mat-label>Ciudad</mat-label>
+                            <input type="text"
+                              placeholder="Seleccione Ciudad"
+                              aria-label="Seleccione"
+                              matInput
+                              [formControl]="cityControl"
+                              [matAutocomplete]="city"
+                              formControlName="xciudad"
+                              disabled="true"
+                              >
+                              <mat-autocomplete #city="matAutocomplete" [disabled]="mode == 'update'" (optionSelected)="onCitySelection($event)">
+                              <mat-option *ngFor="let city of filteredCity | async" [value]="city">
+                                {{ city }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </div> 
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-sm-12 col-md-12">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Dirección</mat-label>
+                            <input [disabled]="mode == 'update'" matInput formControlName="xdireccion" placeholder="Dirección del Accidente">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-12 col-md-12">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Descripción del Accidente</mat-label>
+                            <input [disabled]="mode == 'update'" matInput formControlName="xdescripcion" placeholder="Descripción del Accidente">
+                          </mat-form-field>
+                        </div>
+                        <div class="col-sm-12 col-md-12">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Observación</mat-label>
+                            <input [disabled]="mode == 'update'" matInput formControlName="xobservacion" placeholder="Observación del Accidente">
+                          </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step *ngIf="mode == 'update'" [stepControl]="replacementFormGroup">
+                <ng-template matStepLabel>Piezas Afectadas</ng-template>
+                <div class="d-flex align-items-center justify-content-end">
+                  <button *ngIf="mode == 'update'" matTooltip="Nueva Pieza" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="AnadirReplacement()">
+                    <mat-icon style="color: white;">add</mat-icon>
+                  </button>
+                </div>
+                <form [formGroup]="replacementFormGroup">
+                  <div style="height: 90%;" class="table-responsive">
+                    <div class="w-100">
+                      <input type="text" class="form-control" placeholder="Buscar..." (input)="filterReplacementData($event.target.value)">
+                    </div>
+                    <br>
+                    <table id="replacement_table" class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col"><b style="font-size: 12px;">Piezas</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Cantidad</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Nivel de Daño</b></th>
+                          <th scope="col" *ngIf="mode == 'update'"><b style="font-size: 12px;">Opciones</b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table_select" *ngFor="let i of filteredReplacementData | slice: (pageRespuestos - 1) * pageRespuestosSize : pageRespuestos * pageRespuestosSize" >                            
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.xrepuesto }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.ncantidad }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.xniveldano }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;" *ngIf="mode == 'update'">
+
+                            <div class="d-flex flex-row">
+                              <div>
+                                <button mat-icon-button matTooltip="Ver Detalles" (click)="openBottomSheetEdit(i)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">manage_search</mat-icon>
+                                </button>
+                              </div>
+                              <div>
+                                <button mat-icon-button matTooltip="Eliminar Pieza" (click)="deleteReplacement(i)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">delete_outline</mat-icon>
+                                </button>
+                              </div>
+                            </div>
+
+                          </td>
+                        </tr>
+                        
+                        <tr *ngIf="filteredReplacementData.length <= 0" class="table_no_items">
+                          <td colspan="3">
+                            <small>No hay piezas añadidas</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style="display: grid; place-items: center;">
+                      <ngb-pagination
+                        *ngIf="filteredReplacementData.length > 0"
+                        [collectionSize]="filteredReplacementData.length" 
+                        [(page)]="pageRespuestos" 
+                        [pageSize]="pageRespuestosSize"
+                        [maxSize]="1"
+                        [previousLabel]="'‹'"
+                        [nextLabel]="'›'"
+                        [boundaryLinks]="true"
+                        [ellipses]="false"
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step *ngIf="mode == 'update'" [stepControl]="quotesFormGroup">
+                <ng-template matStepLabel>Cotizaciones</ng-template>
+                <div class="d-flex align-items-center justify-content-end">
+                  <button *ngIf="mode == 'update'" matTooltip="Nueva Cotización" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="addQuotes()">
+                    <mat-icon style="color: white;">add</mat-icon>
+                  </button>
+                </div>
+                <form [formGroup]="quotesFormGroup">
+                  <div style="height: 90%;" class="table-responsive">
+                    <div class="w-100">
+                      <input type="text" class="form-control" placeholder="Buscar..." (input)="filterReplacementData($event.target.value)">
+                    </div>
+                    <br>
+                    <table id="replacement_table" class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col"><b style="font-size: 12px;">Proveedores</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Observación</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Cotización Total</b></th>
+                          <th scope="col" *ngIf="mode == 'update'" style="text-align: center;"><b style="font-size: 12px;">Opciones</b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table_select" *ngFor="let i of filteredQuotesData | slice: (pageQuotes - 1) * pageQuotesSize : pageQuotes * pageQuotesSize" >                            
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.xproveedor }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.xobservacion }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ i.mmontototal }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;" *ngIf="mode == 'update'">
+
+                            <div class="d-flex flex-row justify-content-center">
+                              <div *ngIf="i.mmontototal == 0">
+                                <button mat-icon-button matTooltip="Cotizar" (click)="quoteAcepted(i)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">local_atm</mat-icon>
+                                </button>
+                              </div>
+
+                              <!-- <div *ngIf="i.mmontototal > 0 && i.cestatusgeneral == '14'">
+                                <button mat-icon-button matTooltip="Aceptar toda la Cotizacion" (click)="aceptQuote(i)">
+                                  <mat-icon style="font-size: 20px; color: #0f9b0f;">check</mat-icon>
+                                </button>
+                              </div>
+                              <div *ngIf="i.mmontototal > 0 && i.cestatusgeneral == '14'">
+                                <button mat-icon-button matTooltip="Rechazar Cotizacion" (click)="rejectQuote(i)">
+                                  <mat-icon style="font-size: 20px; color: #6b0d0d;">close</mat-icon>
+                                </button>
+                              </div> -->
+                              <div *ngIf="i.mmontototal > 0 && i.cestatusgeneral == '14'">
+                                <button mat-icon-button matTooltip="Ver Detalles" (click)="quoteDetail(i)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">manage_search</mat-icon>
+                                </button>
+                              </div>
+                              <div *ngIf="i.mmontototal > 0 && i.cestatusgeneral == '4'">
+                                <button mat-icon-button matTooltip="Ver Detalles" (click)="quoteDetail(i)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">manage_search</mat-icon>
+                                </button>
+                              </div>
+                            </div>
+
+                          </td>
+                        </tr>
+                        
+                        <tr *ngIf="filteredQuotesData.length <= 0" class="table_no_items">
+                          <td colspan="3">
+                            <small>No hay Cotizaciones añadidos</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style="display: grid; place-items: center;">
+                      <ngb-pagination
+                        *ngIf="filteredQuotesData.length > 0"
+                        [collectionSize]="filteredQuotesData.length" 
+                        [(page)]="pageQuotes" 
+                        [pageSize]="pageQuotesSize"
+                        [maxSize]="1"
+                        [previousLabel]="'‹'"
+                        [nextLabel]="'›'"
+                        [boundaryLinks]="true"
+                        [ellipses]="false"
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>Órdenes de Servicios</ng-template>
+                <div class="d-flex align-items-center justify-content-end">
+                  <button matTooltip="Agregar Nueva Orden de Servicio"  matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="createServiceOrder()">
+                    <mat-icon style="color: white;">add</mat-icon>
+                    <span></span>
+                  </button>
+                </div>
+                <form [formGroup]="serviceOrderFormGroup">
+                  <div style="height: 90%;" class="table-responsive">
+                    <div class="w-100">
+                      <input type="text" class="form-control" placeholder="Buscar..." (input)="filterServiceOrderData($event.target.value)">
+                    </div>
+                    <br>
+                    <table id="ordenesdeservicios_table" class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col"><b style="font-size: 12px;">Servicio</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Fecha de Ajuste</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Observacion</b></th>
+                          <th scope="col" *ngIf="mode == 'update'"><b style="font-size: 12px;">Estatus</b></th>
+                          <th scope="col" *ngIf="mode == 'update'"><b style="font-size: 12px;">Opciones</b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr [class]="item.cestatusgeneral != '13' ? 'table_select': 'table_select table_warn'" *ngFor="let item of serviceOrderList | slice: (pageOrdenes - 1) * pageSize : (pageOrdenes - 1) * pageOrdenesSize + pageOrdenesSize">                            
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.xservicio }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.fajuste }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.xobservacion }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;" *ngIf="mode == 'update'">
+                            <div>
+                              <div style="width: fit-content;" [class]="item.cestatusgeneral == '6' ?'d-none fade-check':'d-flex flex-column align-items-center fade-check'">
+                                <button class="fade-check" [id]="'unchecked-button-'+item.corden" mat-icon-button [matTooltip]="'Confirmar'" (click)="checkOrder(item)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">check_box_outline_blank</mat-icon>
+                                </button>
+                                <button class="d-none fade-check" [id]="'checked-button-'+item.corden" mat-icon-button>
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">check_box</mat-icon>
+                                </button>
+                                <span style="line-height: 12px; font-size: 10px; margin-bottom: 8px;">{{item.xestatusgeneral}}</span>
+                              </div>
+                              <div [id]="'status-label-'+item.corden" style="transition: all 0.2s ease-in-out;" [class]="item.cestatusgeneral == '6' ?  'd-flex flex-column fade-check' : 'd-none fade-check'">
+                                <span>
+                                  {{item.xestatusgeneral}}
+                                  <i style="color:green" class="ml-1 fa-solid fa-circle-check"></i>
+                                </span>
+                              </div>
+                            </div>
+
+                          </td>
+                          <td style="background-color: transparent !important;" *ngIf="mode == 'update'">
+
+                            <div class="d-flex flex-row">
+                              <div>
+                                <button mat-icon-button matTooltip="Ver Detalles" (click)="editServiceOrder(item)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">manage_search</mat-icon>
+                                </button>
+                              </div>
+                              <div>
+                                <button mat-icon-button matTooltip="Ver Reporte" (click)="getServiceOrderReport(item)">
+                                  <mat-icon style="font-size: 20px; color: #d6af00;">picture_as_pdf</mat-icon>
+                                </button>
+                              </div>
+                            </div>
+
+                          </td>
+                        </tr>
+                        <tr *ngIf="serviceOrderList.length <= 0" class="table_no_items">
+                          <td colspan="12">
+                            <small>No hay Ordenes de Servicios añadidos</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style="display: grid;place-items: center;">
+                      <ngb-pagination
+                        *ngIf="serviceOrderList.length > 0"
+                        [collectionSize]="serviceOrderList.length" 
+                        [(page)]="pageOrdenes" 
+                        [pageSize]="pageOrdenesSize"
+                        [maxSize]="1"
+                        [previousLabel]="'‹'"
+                        [nextLabel]="'›'"
+                        [boundaryLinks]="true"
+                        [ellipses]="false"
+                        
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              
+              
+              <mat-step *ngIf="mode == 'update'" [stepControl]="seguimientosFormGroup">
+                <ng-template matStepLabel>Seguimientos</ng-template>
+                <div class="d-flex align-items-center justify-content-end">
+                  <button *ngIf="mode == 'update'" matTooltip="Nueva Pieza" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="openSeguimientosForm()">
+                    <mat-icon  style="color: white;">add</mat-icon>
+                  </button>
+                </div>
+                <form [formGroup]="seguimientosFormGroup">
+                  <div style="height: 90%;" class="table-responsive">
+                    <div class="w-100">
+                      <input type="text" class="form-control" placeholder="Buscar..." (input)="filterSeguimientosData($event.target.value)">
+                    </div>
+                    <br>
+                    <table id="seguimientos_table" class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col"><b style="font-size: 12px;">Tipo Seguimiento</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Motivo Seguimiento</b></th>
+                          <th scope="col"><b style="font-size: 12px;">Dia Seguimiento</b></th>
+                          <th scope="col"><b style="font-size: 12px;"></b></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="table_select" *ngFor="let item of filteredSeguimientosData | slice: (pageSeguimientos - 1) * pageSize : (pageSeguimientos - 1) * pageSeguimientosSize + pageSeguimientosSize" (click)="editTrackingModal($event, item)">                            
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.xtiposeguimiento }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.xmotivoseguimiento }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>{{ item.xfseguimientonotificacion }}</small>
+                          </td>
+                          <td style="background-color: transparent !important;">
+                            <small>
+                              <mat-icon *ngIf="item.bcerrado != true" style="color: #fcb203;">priority_high</mat-icon>
+                            <mat-icon *ngIf="item.bcerrado == true" style="color: #818181;">horizontal_rule</mat-icon>
+                            </small>
+                          </td>
+                        </tr>
+                        <tr *ngIf="filteredSeguimientosData.length <= 0" class="table_no_items">
+                          <td colspan="12">
+                            <small>No hay Seguimientos añadidos</small>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div style="display: grid;place-items: center;">
+                      <ngb-pagination
+                        *ngIf="filteredSeguimientosData.length > 0"
+                        [collectionSize]="filteredSeguimientosData.length" 
+                        [(page)]="pageSeguimientos" 
+                        [pageSize]="pageSeguimientosSize"
+                        [maxSize]="1"
+                        [previousLabel]="'‹'"
+                        [nextLabel]="'›'"
+                        [boundaryLinks]="true"
+                        [ellipses]="false"
+                        
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step *ngIf="mode == 'update'" style="position: relative;">
+                
+                <ng-template matStepLabel>Notas</ng-template>
+                <button type="button" style="padding: 10px 14px; position: absolute; top: 10px; right: 10px;" class="btn btn-primary m-0" (click)="addFile('newFile')">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+                <form >
+                  
+                  <div style="margin-top: 3.5rem;" *ngIf="notasList.length > 0">
+
+                    <div *ngFor="let nota of notasList | slice: (pageNotas - 1) * pageSize : (pageNotas - 1) * pageNotasSize + pageNotasSize; index as i" class="row mt-4 added-note">
+                      <div class="col-md-6 d-flex align-items-center">
+                        <a style="text-decoration: none;" target="_blank" [href]="nota.xrutaarchivo">
+                          <span style="color: black;">{{nota.xnombrenota}}</span>
+                          <i class="ml-1 fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                      </div>
+                      <form class="col-md-5 d-flex align-items-center">  
+                        <input [disabled]="nota.type == 'create' ? false : true" class="input-mat" type="text"
+                        placeholder="Descripcion de la Nota"
+                        [(ngModel)]="nota.xnotanotificacion"
+                        [value]="nota.xnotanotificacion"
+                        matInput
+                        >
+                      </form>
+                      <div *ngIf="nota.type == 'create'" class="col-md-1 d-flex align-items-center justify-content-end">
+                        <button (click)="removeNote(i)" style="padding: 10px 14px;" class="btn btn-primary">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div style="display: grid;place-items: center;" class="mt-4">
+                      <ngb-pagination
+                      *ngIf="notasList.length > 0"
+                      [collectionSize]="notasList.length" 
+                      [(page)]="pageNotas" 
+                      [pageSize]="pageNotasSize"
+                      [maxSize]="1"
+                      [previousLabel]="'‹'"
+                      [nextLabel]="'›'"
+                      [boundaryLinks]="true"
+                      [ellipses]="false"
+                      
+                      ></ngb-pagination>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <form [class]="notasList.length > 0 ? 'w-100 d-flex justify-content-end align-items-center mt-4' : 'w-100 d-flex justify-content-between align-items-center mt-4'">
+                      <span *ngIf="notasList.length <= 0">
+                        No hay notas añadidas por el momento
+                      </span>
+                      <input type="file" accept="*" style="display: none;" id="newFile" (change)="addNote($event)">
+                    </form>
+                  </div>
+                  
+                  <div class="row justify-content-center py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+            </mat-stepper>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button *ngIf="mode != 'update' && information" matTooltip="Continuar" matTooltipPosition="left" class="btn-flotante btn-flotante-3" mat-fab style="background: #d6af00;" (click)="onNextStep()">
+    <mat-icon>open_in_new</mat-icon>
+  </button>
+  <button *ngIf="mode == 'update' && information" matTooltip="Guadar" matTooltipPosition="left" class="btn-flotante btn-flotante-3" mat-fab style="background: #d6af00;" (click)="saveNotification()">
+    <mat-icon>save</mat-icon>
+  </button>
+
+  <ng-template #Alerta let-dialogRef="dialogRef">
+    <div mat-dialog-title class="d-flex justify-content-between align-items-center">
+      <h2 class="notification-title">Información Adicional</h2>
+      <button *ngIf="mode != 'update'" matTooltip="Guardar" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="onNextStepTracing()">
+        <mat-icon  style="color: white;">save</mat-icon>
+      </button>
+      <button *ngIf="mode == 'update'" matTooltip="Elegir Proveedor" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="onNextStepProveedor()">
+        <mat-icon  style="color: white;">chevron_right</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="my-3"></mat-divider>
+    <mat-dialog-content>
+      <!-- <hr style="background: black;"> -->
+      <div class="row form-container">
+        <div class="col-md-4 py-3">
+          <form [formGroup]="claimFormGroup">
+            <div class="row">
+              <h3 class="text-center notification-title" style="margin-bottom: 1.8em;"><b>Seguimiento</b></h3>
+              <div class="col-sm-12 ">
+                <mat-form-field class="example-full-width" >
+                  <mat-label>Tipo de Seguimiento</mat-label>
+                  <input type="text"
+                         placeholder="Seleccione Tipo de Seguimiento"
+                         aria-label="Seleccione"
+                         matInput
+                         [formControl]="tracingTypeControl"
+                         [matAutocomplete]="traTy"
+                         >
+                         <mat-autocomplete #traTy="matAutocomplete" (optionSelected)="onTracingTypeSelection($event)">
+                          <mat-option *ngFor="let tracingType of filteredTracingType | async" [value]="tracingType">
+                            {{ tracingType }}
+                          </mat-option>
+                        </mat-autocomplete>
+                </mat-form-field>
+              </div> 
+              <div class="col-sm-12">
+                <mat-form-field class="example-full-width" >
+                  <mat-label>Motivo de Seguimiento</mat-label>
+                  <input type="text"
+                         placeholder="Seleccione Motivo de Seguimiento"
+                         aria-label="Seleccione"
+                         matInput
+                         [formControl]="tracingMotiveControl"
+                         [matAutocomplete]="motive"
+                         >
+                         <mat-autocomplete #motive="matAutocomplete" (optionSelected)="onTracingMotiveSelection($event)">
+                          <mat-option *ngFor="let tracingMotive of filteredTracingMotive | async" [value]="tracingMotive">
+                            {{ tracingMotive }}
+                          </mat-option>
+                        </mat-autocomplete>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-8">
+                <mat-form-field class="example-full-width mins-input">
+                  <mat-label>Recordatorio cada</mat-label>
+                  <input matInput type="number" formControlName="nalerta" [disabled]="mode == 'update'">
+                </mat-form-field>
+              </div> 
+              <div class="col-sm-4">
+                <mat-form-field class="example-full-width mins-input">
+                  <mat-select formControlName="xintervalo" [disabled]="mode == 'update'">
+                    <mat-option *ngFor="let time of times; track time" [value]="time">{{time}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> 
+              <div class="col-sm-12 col-md-12">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Observación</mat-label>
+                  <textarea matInput formControlName="xobservacion_s" placeholder="Observación del Seguimiento"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-sm-12 text-center example-full-width">
+                <section class="d-inline">
+                  <h5>Cerrado</h5>
+                  <span class="damage-option">
+                    <span>No</span>
+                    <mat-slide-toggle formControlName="bcerrado"></mat-slide-toggle>
+                    <span>Si</span>
+                </span>
+                </section>
+              </div>
+            </div>
+          </form>
+
+        </div>
+        
+        <div class="col-md-8 pt-3">
+          <div class="row justify-content-center h-100">
+            <h3 class="text-center notification-title"><b>Piezas Afectadas</b></h3>
+
+            <div style="height: 90%;" class="table-responsive">
+              <form [formGroup]="claimFormGroup">
+                <div class="w-100">
+                  <input type="text" class="form-control" placeholder="Filtrar por pieza..." (input)="filterData($event.target.value)">
+                </div>
+                <br>
+                <table id="respuestos_table" class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 40px;"><b style="width: 30px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;"></b></th>
+                      <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">#</b></th>
+                      <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">PIEZA AFECTADA</b></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of filteredData | slice: (page - 1) * pageSize : (page - 1) * pageSize + pageSize">
+                      <th scope="row" style="width: 40px;">
+                        <input type="checkbox" formControlName="brepuesto" [checked]="isSelected(item.value)" (change)="toggleSelection(item.value)" (click)="openBottomSheet()">
+                      </th>
+                      <td>{{ item.value }}</td>
+                      <td style="white-space: nowrap">{{ item.text }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="display: grid;place-items: center;">
+                  <ngb-pagination 
+                    [collectionSize]="filteredData.length" 
+                    [(page)]="page" 
+                    [pageSize]="pageSize"
+                    [maxSize]="1"
+                    [previousLabel]="'‹'"
+                    [nextLabel]="'›'"
+                    [boundaryLinks]="true"
+                    [ellipses]="false"
+                    
+                  ></ngb-pagination>
+                </div>
+              </form>
+            </div>
+          
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+  
+  <ng-template #trackingAdd let-dialogRef="dialogRef">
+    <div mat-dialog-title class="d-flex justify-content-between align-items-center">
+      <h2 class="notification-title" *ngIf="formType == 'create'">Añadir Seguimiento</h2>
+      <h2 class="notification-title" *ngIf="formType != 'create'">Seguimiento</h2>
+      <button *ngIf="mode == 'update' && formType == 'create'" matTooltip="Añadir Seguimiento" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="addSeguimiento()">
+        <mat-icon  style="color: white;">add</mat-icon>
+      </button>
+      <button *ngIf="mode == 'update' && formType == 'edit'" matTooltip="Guardar Información" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="editSeguimiento()">
+        <mat-icon  style="color: white;">save</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="my-3"></mat-divider>
+    <mat-dialog-content>
+      <!-- <hr style="background: black;"> -->
+      <div class="row form-container">
+        <form [formGroup]="claimFormGroup">
+          <div class="row py-3">
+            <h3 class="text-center notification-title" style="margin-bottom: 1.8em;"><b>Seguimiento</b></h3>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width" >
+                <mat-label>Tipo de Seguimiento</mat-label>
+                <input type="text"
+                        placeholder="Seleccione Tipo de Seguimiento"
+                        aria-label="Seleccione"
+                        matInput
+                        [formControl]="tracingTypeControl"
+                        [matAutocomplete]="traTy"
+                        >
+                        <mat-autocomplete #traTy="matAutocomplete" (optionSelected)="onTracingTypeSelection($event)">
+                        <mat-option *ngFor="let tracingType of filteredTracingType | async" [value]="tracingType">
+                          {{ tracingType }}
+                        </mat-option>
+                      </mat-autocomplete>
+              </mat-form-field>
+            </div> 
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width" >
+                <mat-label>Motivo de Seguimiento</mat-label>
+                <input type="text"
+                        placeholder="Seleccione Motivo de Seguimiento"
+                        aria-label="Seleccione"
+                        matInput
+                        [formControl]="tracingMotiveControl"
+                        [matAutocomplete]="motive"
+                        >
+                        <mat-autocomplete #motive="matAutocomplete" (optionSelected)="onTracingMotiveSelection($event)">
+                        <mat-option *ngFor="let tracingMotive of filteredTracingMotive | async" [value]="tracingMotive">
+                          {{ tracingMotive }}
+                        </mat-option>
+                      </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div class="col-md-2">
+              <!-- <mat-form-field class="example-full-width mins-input"> -->
+              <mat-form-field class="example-full-width date-picker-asd">
+                <mat-label>Recordatorio cada</mat-label>
+                <input
+                type="number"
+                formControlName="nalerta"
+                matInput
+                >
+              </mat-form-field>
+            </div>
+            <div class="col-md-2">
+              <mat-form-field class="example-full-width date-picker-asd">
+                <mat-select formControlName="xintervalo">
+                  <mat-option *ngFor="let time of times; track time" [value]="time">{{time}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <mat-label>Observación</mat-label>
+                <textarea matInput formControlName="xobservacion_s" placeholder="Observación del Seguimiento"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12 text-center example-full-width">
+              <section class="d-inline">
+                <h5>Cerrado</h5>
+                <span class="damage-option">
+                  <span>No</span>
+                  <mat-slide-toggle formControlName="bcerrado"></mat-slide-toggle>
+                  <span>Si</span>
+              </span>
+              </section>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+ 
+  <ng-template #Proveedores let-dialogRef="dialogRef">
+    <div mat-dialog-title class="d-flex justify-content-between align-items-center">
+      
+      <div>
+        <button *ngIf="mode == 'update'" matTooltip="Seleccionar Piezas" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="onNextStepCotizacion()" style="margin-right: 10px;">
+          <mat-icon  style="color: white;">chevron_left</mat-icon>
+          <mat-icon *ngIf="mode != 'update'" style="color: white;">save</mat-icon>
+        </button>
+        <h2 class="notification-title">Seleccionar Proveedor</h2>
+      </div>
+      <button *ngIf="mode == 'update'" matTooltip="Elegir Proveedor" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="onNextStepCotizacion()">
+        <mat-icon  style="color: white;">chevron_right</mat-icon>
+        <mat-icon *ngIf="mode != 'update'" style="color: white;">save</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="my-3"></mat-divider>
+    <mat-dialog-content>
+      <!-- <hr style="background: black;"> -->
+      <div class="row form-container">
+        <div class="col-md-4 pt-3">
+          <div class="row h-100 justify-content-center">
+            <h3 class="text-center notification-title"><b>Respuestos</b></h3>
+            <div style="height: 90%;" class="table-responsive">
+              <div class="w-100">
+                <input type="text" class="form-control" placeholder="Filtrar por pieza..." (input)="filterData($event.target.value)">
+              </div>
+              <br>
+              <table id="respuestos_proveedores_table" class="table">
+                <thead>
+                  <tr>
+                    <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">PIEZAS</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredRepuestosData | slice: (pageRespuestosProveedores - 1) * pageSize : (pageRespuestosProveedores - 1) * pageRespuestosProveedoresSize + pageRespuestosProveedoresSize">
+                    
+                    <td class="table_select" (click)="selectRepuesto(item)">
+                      <small>{{ item.text }}</small>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="display: grid;place-items: center;">
+                <ngb-pagination 
+                  [collectionSize]="filteredRepuestosData.length" 
+                  [(page)]="pageRespuestosProveedores" 
+                  [pageSize]="pageRespuestosProveedoresSize"
+                  [maxSize]="1"
+                  [previousLabel]="'‹'"
+                  [nextLabel]="'›'"
+                  [boundaryLinks]="true"
+                  [ellipses]="false"
+                  
+                ></ngb-pagination>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        
+        <div class="col-md-8 pt-3">
+          <div class="row justify-content-center h-100">
+            <h3 class="text-center notification-title"><b>Proveedores</b></h3>
+
+            <div style="height: 90%;" class="table-responsive">
+              <div class="w-100">
+                <input type="text" class="form-control" placeholder="Filtrar por pieza..." (input)="filterData($event.target.value)">
+              </div>
+              <br>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width: 40px;"><b style="width: 30px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;"></b></th>
+                    <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">#</b></th>
+                    <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">PIEZA</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of filteredData | slice: (page - 1) * pageSize : (page - 1) * pageSize + pageSize">
+                    <th scope="row" style="width: 40px;">
+                      <input type="checkbox" [checked]="selectedReplacement.includes(item.value)" (change)="toggleSelection(item.value)">
+                    </th>
+                    <td>{{ item.value }}</td>
+                    <td style="white-space: nowrap">{{ item.text }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="display: grid;place-items: center;">
+                <ngb-pagination 
+                  [collectionSize]="filteredData.length" 
+                  [(page)]="page" 
+                  [pageSize]="pageSize"
+                  [maxSize]="1"
+                  [previousLabel]="'‹'"
+                  [nextLabel]="'›'"
+                  [boundaryLinks]="true"
+                  [ellipses]="false"
+                  
+                ></ngb-pagination>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+
+  <ng-template #bottomSheetTemplate>
+    <div class="button-container">
+      <button class="button cancel-button" (click)="this.bottomSheet.dismiss()">
+        <span class="X"></span>
+        <span class="Y"></span>
+        <div class="close">Cerrar</div>
+      </button>
+    </div>
+    <form [formGroup]="claimFormGroup">
+      <h3 class="text-center"><strong>Detalle de la Pieza Afectada</strong></h3>
+      <div class="row py-3">
+
+          <div class="col-sm-12 col-md-6">
+            <mat-form-field class="example-full-width">
+              <mat-label>Nivel de Daño</mat-label>
+              <mat-select formControlName="xniveldano">
+                <mat-option value="Fuerte">Fuerte</mat-option>
+                <mat-option value="Leve">Leve</mat-option>
+                <mat-option value="Moderado">Moderado</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-sm-12 col-md-6">
+            <mat-form-field class="example-full-width">
+              <mat-label>Cantidad</mat-label>
+              <input matInput type="number" placeholder="Cantidad de Piezas" formControlName="ncantidad">
+            </mat-form-field>
+          </div>
+      </div>
+    </form>
+
+    <button *ngIf="this.mode == 'create'" class="learn-more form_bTn" (click)="addReplacement()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Aceptar</span>
+    </button>
+
+    <button *ngIf="this.mode == 'update' && this.formType == 'create'" class="learn-more form_bTn" (click)="addReplacement()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Aceptar</span>
+    </button>
+
+    <button *ngIf="this.mode == 'update' && this.formType == 'update' && isEditButtonVisible" class="learn-more form_bTn" (click)="editReplacement()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Editar</span>
+    </button>
+
+    <!-- <button mat-raised-button *ngIf="this.mode == 'create'" (click)="addReplacement()">Aceptar</button>
+    <button mat-raised-button *ngIf="this.mode == 'update' && this.formType == 'create'" (click)="addReplacement()">Aceptar</button>
+    <button mat-raised-button *ngIf="this.mode == 'update' && this.formType == 'update' && isEditButtonVisible" (click)="editReplacement()">Editar</button> -->
+
+
+    <div class="row" *ngIf="!isEditButtonVisible">
+      <div class="col-md-6">
+        <button class="learn-more form_bTn" (click)="updateReplacement($event)">
+          <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+          </span>
+          <span class="button-text">Guardar</span>
+        </button>
+      </div> 
+    </div>
+
+  </ng-template>
+
+  <ng-template #ServiceOrder let-dialogRef="dialogRef">
+    <div mat-dialog-title class="d-flex justify-content-between align-items-center">
+      <h2 *ngIf="formType == 'create'" class="notification-title">Nueva Orden de Servicio</h2>
+      <h2 *ngIf="formType == 'update'" class="notification-title">Información de la Orden de Servicio</h2>
+      <button *ngIf="formType == 'create'" matTooltip="Guardar Orden de Servicio" matTooltipPosition="left" style="background: #d6af00;" mat-button (click)="onNextStepServiceOrder()">
+        <mat-icon  style="color: white;">save</mat-icon>
+      </button>
+    </div>
+    <mat-divider class="my-3"></mat-divider>
+    <mat-dialog-content>
+      <!-- <hr style="background: black;"> -->
+      <div class="row form-container">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="row">
+              <form [formGroup]="serviceOrderFormGroup">
+                <div class="pt-2 col-sm-12" *ngIf="formType == 'create' || ccotizacionOrden">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Cotización <small>(Opcional)</small></mat-label>
+                    <mat-select formControlName="ccotizacion" (selectionChange)="onSelectQuote($event)">
+                      <mat-option value="">Sin cotización</mat-option>
+                      <mat-option *ngFor="let quote of aceptedQuotes" [value]="quote.ccotizacion">
+                        Cotización #{{quote.ccotizacion}} <small>(Total: {{quote.mmontototal}} {{quote.xmoneda}} )</small>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-sm-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Observación de la Orden</mat-label>
+                    <textarea rows="1" matInput formControlName="xobservacion"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <div class="" style="display: flex;">
+                  <div class="col-md-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Fecha de Solicitud</mat-label>
+                      <input matInput [matDatepicker]="fsolicitud" formControlName="fsolicitud">
+                      <mat-datepicker-toggle matSuffix [for]="fsolicitud"></mat-datepicker-toggle>
+                      <mat-datepicker #fsolicitud></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="example-full-width">
+                      <mat-label>Fecha de Ajuste</mat-label>
+                      <input matInput [matDatepicker]="fajuste" formControlName="fajuste">
+                      <mat-datepicker-toggle matSuffix [for]="fajuste"></mat-datepicker-toggle>
+                      <mat-datepicker #fajuste></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="row" *ngIf="activaReplacements">
+              <mat-accordion class="example-headers-align expansion_notificacion" multi>
+                <mat-expansion-panel class="">
+                  <mat-expansion-panel-header style="background-color: #fcb2038c;">
+                    <mat-panel-title>
+                      <p class="m-0 text-center">
+                        <strong>Repuestos</strong>
+                      </p>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  
+                  <div style="min-height: fit-content !important;" class="mul-container">
+                    <div class="m-s-items-container" *ngFor="let replacement of quotesFinallyAceptedList">
+                      <button class="mat-focus-indicator m-s-items m-s-added-2 b-2 mat-raised-button">
+                        <span>{{replacement.xrepuesto}}</span>
+                        <br>
+                        <small>{{replacement.mtotalrepuesto}} {{replacement.xmoneda}} ({{replacement.munitariorepuesto}} {{replacement.xmoneda}} x {{replacement.ncantidad}})</small>                          
+                      </button>
+                    </div>
+                  </div>
+                  <div style="margin-top: 10px; text-align: end;">
+                    <small>(Precios no incluyen I.V.A)</small>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+          
+
+          
+          <div class="col-md-5 d-flex flex-column justify-content-between" style="background-color: #ffde4d24; padding: 18px 10px 0px;">
+            <form [formGroup]="serviceOrderFormGroup">
+              <div class="d-flex flex-column flex-wrap">
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width" >
+                    <mat-label>Servicios Contratados</mat-label>
+                    <input type="text"
+                          placeholder="Seleccione Servicios Contratados"
+                          aria-label="Seleccione"
+                          matInput
+                          [formControl]="serviceControl"
+                          [matAutocomplete]="service"
+                          formControlName="xservicio">
+                          <mat-autocomplete #service="matAutocomplete" (optionSelected)="onServiceSelection($event)">
+                            <mat-option *ngFor="let service of filteredService | async" [value]="service">
+                              {{ service }}
+                            </mat-option>
+                          </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width" >
+                    <mat-label>Servicios Adicionales</mat-label>
+                    <input type="text"
+                          placeholder="Seleccione Servicios Adicionales"
+                          aria-label="Seleccione"
+                          matInput
+                          [formControl]="additionalServiceControl"
+                          [matAutocomplete]="additional"
+                          formControlName="xservicio_adicional">
+                          <mat-autocomplete #additional="matAutocomplete" (optionSelected)="onAdditionalServiceSelection($event)">
+                            <mat-option *ngFor="let additional of filteredAdditionalService | async" [value]="additional">
+                              {{ additional }}
+                            </mat-option>
+                          </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width" >
+                    <mat-label>Proveedores por Servicios</mat-label>
+                    <input type="text"
+                            placeholder="Seleccione Proveedor"
+                            aria-label="Seleccione"
+                            matInput
+                            [formControl]="providerControl"
+                            [matAutocomplete]="provider"
+                            formControlName="xproveedor">
+                            <mat-autocomplete #provider="matAutocomplete" (optionSelected)="onProviderSelection($event)">
+                            <mat-option *ngFor="let provider of filteredProvider | async" [value]="provider">
+                              {{ provider }}
+                            </mat-option>
+                          </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="d-flex">
+                <div *ngIf="formType == 'update'" class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <mat-label>Estatus</mat-label>
+                    <mat-select formControlName="cestatusgeneral">
+                      <mat-option *ngFor="let status of statusList" [value]="status.id">
+                        {{status.value}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12" *ngIf="activaGrua">
+                  <mat-accordion class="example-headers-align expansion_notificacion" multi>
+                    <mat-expansion-panel class="">
+                      <mat-expansion-panel-header style="background-color: #fcb2038c;">
+                        <mat-panel-title>
+                          <p class="m-0 text-center">
+                            <strong>Datos de Grúa</strong>
+                          </p>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+  
+  
+                      <div class="row">
+                        <div class="col-md-12">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Lugar de Origen</mat-label>
+                              <textarea rows="1" matInput formControlName="xorigen_grua"></textarea>
+                            </mat-form-field>
+                        </div>
+                      </div>
+  
+                      <div class="row">
+                        <div class="col-md-12">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Lugar de Destino</mat-label>
+                              <textarea rows="1" matInput formControlName="xdestino_grua"></textarea>
+                            </mat-form-field>
+                        </div>
+                      </div>
+  
+                      <div class="row">
+                        <div class="col-md-6">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Monto a Cancelar</mat-label>
+                              <input type="number" matInput formControlName="mmonto">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                          <mat-form-field class="example-full-width" >
+                            <mat-label>Moneda</mat-label>
+                            <input type="text"
+                            placeholder="Seleccione Moneda"
+                            aria-label="Seleccione"
+                            matInput
+                            [formControl]="coinControl"
+                            [matAutocomplete]="coin"
+                            formControlName="xmoneda">
+                              <mat-autocomplete #coin="matAutocomplete" (optionSelected)="onCoinSelection($event)">
+                                <mat-option *ngFor="let coin of filteredCoin | async" [value]="coin">
+                                  {{ coin }}
+                                </mat-option>
+                              </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+
+  <ng-template #replacement let-dialogRef="dialogRef">
+    <mat-dialog-content>
+      <!-- <hr style="background: black;"> -->
+      <div class="row form-container">
+        <div class="row">
+          <div class="col-md-12 pt-3">
+            <div class="row justify-content-center h-100">
+              <div mat-dialog-title class="d-flex justify-content-between align-items-center">
+                <h2 class="notification-title">Piezas Afectadas</h2>
+                <button class="learn-more form_bTn" (click)="this.dialogRef.close()">
+                  <span class="circle" aria-hidden="true">
+                    <span class="icon arrow"></span>
+                  </span>
+                  <span class="button-text">Continuar</span>
+                </button>
+              </div>
+
+              <div style="height: 90%;" class="table-responsive py-4">
+                <form [formGroup]="claimFormGroup">
+                  <div class="w-100">
+                    <input type="text" class="form-control" placeholder="Filtrar por pieza..." (input)="filterData($event.target.value)">
+                  </div>
+                  <br>
+                  <table id="respuestos_table" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" style="width: 40px;"><b style="width: 30px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;"></b></th>
+                        <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">#</b></th>
+                        <th scope="col"><b style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight: 700;">PIEZA</b></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of filteredData | slice: (page - 1) * pageSize : (page - 1) * pageSize + pageSize">
+                        <th scope="row" style="width: 40px;">
+                          <input type="checkbox" [value]="item.check" [checked]="isSelected(item.value)" (change)="toggleSelection($event, item.value)" enable>
+                        </th>
+                        <td>{{ item.value }}</td>
+                        <td style="white-space: nowrap">{{ item.text }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="display: grid;place-items: center;">
+                    <ngb-pagination 
+                      [collectionSize]="filteredData.length" 
+                      [(page)]="page" 
+                      [pageSize]="pageSize"
+                      [maxSize]="1"
+                      [previousLabel]="'‹'"
+                      [nextLabel]="'›'"
+                      [boundaryLinks]="true"
+                      [ellipses]="false"
+                      
+                    ></ngb-pagination>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+
+  <ng-template #newQuotes let-dialogRef="dialogRef">
+    <mat-dialog-content>
+      <div class="d-flex flex-column h-100 py-3 form-container">
+        <form [formGroup]="quotesFormGroup">
+          <div class="row flex-grow-1" style="overflow-y: auto;">
+            <div class="col-md-8 mx-auto">
+              <h3 class="text-center py-3" style="font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">Seleccione el servicio</h3>
+              <div class="mul-container">
+                <div class="m-s-items-container" *ngFor="let item of serviceQuoteList">
+                  <button
+                    *ngIf="item.xservicio"
+                    type="button"
+                    mat-raised-button
+                    [value]="item.xservicio"
+                    class="m-s-items mb-2"
+                    [ngClass]="{ 'm-s-added': selectedServiceId === item.cservicio }"
+                    (click)="onServiceClick(item.cservicio, item.report)"
+                  >
+                    {{ item.xservicio }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row flex-grow-1">
+            <div class="col-md-8 mx-auto py-3">
+              <div class="text-center d-flex justify-content-between" *ngIf="selectedServiceId">
+                <div class="d-flex flex-row flex-wrap">
+                  <h5 style="font-weight: 700; text-transform: uppercase; text-align: start;" class="w-100">Proveedores</h5>
+                  <small *ngFor="let item of providerSelectedList">
+                    {{item.xproveedor}}
+                  </small>
+                </div>
+                <button *ngIf="providerSelectedList.length > 0" matTooltip="Continuar" matTooltipPosition="right" style="background: #d6af00;" mat-button (click)="validateQuotes()">
+                  <mat-icon style="color: white;">save</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </mat-dialog-content>
+  </ng-template>
+
+  <ng-template #quotesObservation>
+    <div class="button-container">
+      <button class="button cancel-button" (click)="this.bottomSheet.dismiss()">
+        <span class="X"></span>
+        <span class="Y"></span>
+        <div class="close">Cerrar</div>
+      </button>
+    </div>
+    <form [formGroup]="quotesFormGroup">
+      <h3 class="text-center"><strong>Coloque una observación para los proveedores</strong></h3>
+      <div class="row py-3">
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width">
+              <mat-label>Observación</mat-label>
+              <textarea [disabled]="mode == 'update'" matInput formControlName="xobservacion"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+    <button *ngIf="this.mode == 'create'" class="learn-more form_bTn" (click)="anadirQuotes()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Aceptar</span>
+    </button>
+
+    <button *ngIf="this.mode == 'update' && this.formType == 'create'" class="learn-more form_bTn" (click)="anadirQuotes()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Aceptar</span>
+    </button>
+
+    <button *ngIf="this.mode == 'update' && this.formType == 'update' && isEditButtonVisible" class="learn-more form_bTn" (click)="editReplacement()">
+      <span class="circle" aria-hidden="true">
+        <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Editar</span>
+    </button>
+
+    <!-- <button mat-raised-button *ngIf="this.mode == 'create'" (click)="addReplacement()">Aceptar</button>
+    <button mat-raised-button *ngIf="this.mode == 'update' && this.formType == 'create'" (click)="addReplacement()">Aceptar</button>
+    <button mat-raised-button *ngIf="this.mode == 'update' && this.formType == 'update' && isEditButtonVisible" (click)="editReplacement()">Editar</button> -->
+
+
+    <div class="row" *ngIf="!isEditButtonVisible">
+      <div class="col-md-6">
+        <button class="learn-more form_bTn" (click)="updateReplacement($event)">
+          <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+          </span>
+          <span class="button-text">Guardar</span>
+        </button>
+      </div> 
+    </div>
+
+  </ng-template>
+
+  <ng-template #quoteAcep let-dialogRef="dialogRef">
+    <mat-dialog-content>
+      <div class="row form-container">
+        <div class="row">
+          <div>
+            <div class="col-md-12 pt-1">
+              <div class="row justify-content-center h-100">
+                <div mat-dialog-title class="d-flex justify-content-between align-items-center py-3">
+                  <h2 class="notification-title">Cotización N° {{ccotizacion}}</h2>
+                  <button *ngIf="report != 'G'" class="learn-more form_bTn" (click)="this.dialogRef.close();">
+                    <span class="circle" aria-hidden="true">
+                      <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">Continuar</span>
+                  </button>
+                  <button *ngIf="report == 'G'" class="learn-more form_bTn" (click)="addCotizacionGrua()">
+                    <span class="circle" aria-hidden="true">
+                      <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">Continuar</span>
+                  </button>
+                </div>
+                <div style="padding: 0px !important; justify-content: stretch;" class="row mb-3">
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0" >
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Servicio a Cotizar
+                        <i class= "fi fi-rs-shipping-timed" style="font-size: 20px;"></i>
+                      </div>
+                      
+                      <div style="padding-top: 0px !important; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xservicioCotizacion}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0">
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Proveedor
+                        <i class= "fi fi-rr-wrench-alt" style="font-size: 20px;"></i>
+                      </div>
+                      <div style="padding-top: 0px; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xproveedor}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0">
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Observación
+                        <i class= "fi fi-rr-eye" style="font-size: 20px;"></i>
+                      </div>
+                      <div style="padding-top: 0px !important; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xobservacion}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="black-hr">
+                <div class="row py-4" *ngIf="report != 'G'">
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12" *ngIf="replacementQuoteList.length > 0">
+                        <p class="text-center" style="font-weight: 500">
+                          Piezas Afectadas de la Cotización.
+                        </p>         
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th scope="col"><h4 style="font-weight: 500">Pieza Afectada</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Cantidad</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Nivel de Daño</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Disponibilidad</h4></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of replacementQuoteList" style="cursor: pointer;" >
+                              <td>{{ item.xrepuesto }} </td>
+                              <td>{{ item.ncantidad }} </td>
+                              <td>{{ item.xniveldano }}</td>
+                              <td>                           
+                                <section class="w-100">
+                                  <span class="damage-option d-flex justify-content-center">
+                                    <mat-slide-toggle [(ngModel)]="item.bdisponible" (change)="openModalAvailable(item, $event)"></mat-slide-toggle>
+                                  </span>
+                                </section>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-sm-12" *ngIf="report != 'G'">
+                        <p class="text-center" style="font-weight: 500" *ngIf="quotesFinallyAceptedList.length > 0">
+                          Piezas Afectadas Aceptadas
+                        </p>         
+                        <table class="table table-striped" *ngIf="quotesFinallyAceptedList.length > 0">
+                          <thead>
+                            <tr>
+                              <th scope="col"><h4 style="font-weight: 500">Pieza Afectada</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Cantidad</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Monto Unitario</h4></th>
+                              <th scope="col"><h4 style="font-weight: 500">Monto Total por Pieza</h4></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of quotesFinallyAceptedList" style="cursor: pointer;" >
+                              <td>{{ item.xrepuesto }} </td>
+                              <td>{{ item.ncantidad }} </td>
+                              <td>{{ item.munitariorepuesto }}</td>
+                              <td>{{ item.mtotalrepuesto }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <h4 class="text-end" *ngIf="quotesFinallyAceptedList.length > 0"><strong>Subtotal:</strong> {{montoTotalRepuesto}} {{moneda}}</h4>
+                        <h4 class="text-end" *ngIf="quotesFinallyAceptedList.length > 0"><strong>Total con IVA:</strong> {{montoConIva}} {{moneda}}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="report == 'G'">
+                  <form [formGroup]="gruaFormGroup">
+                    <div class="row py-4">
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Lugar de Origen</mat-label>
+                            <textarea rows="1" matInput formControlName="xorigen_grua"></textarea>
+                          </mat-form-field>
+                      </div>
+    
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Lugar de Destino</mat-label>
+                            <textarea rows="1" matInput formControlName="xdestino_grua"></textarea>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Monto a Cancelar</mat-label>
+                            <input type="number" matInput formControlName="mmonto">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-6">
+                        <mat-form-field class="example-full-width" >
+                          <mat-label>Moneda</mat-label>
+                          <mat-select formControlName="cmoneda" (selectionChange)="checkMoneda($event)">
+                            <mat-option *ngFor="let i of coinList" [value]="i.id">{{i.value}}</mat-option>
+                          </mat-select>
+                          </mat-form-field>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+  
+  
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+  
+  <ng-template #quoteAvailable let-dialogRef="dialogRef">
+    <mat-dialog-content>
+      <div class="col-md-12 pt-3 mx-auto">
+        <div class="row justify-content-center h-100">
+          <div class="col-10">
+            <h2 class="text-center" style="font-weight: 500">Detalle de Aceptación</h2>
+          </div>
+          <div class="col-2">
+            <button class="button cancel-button" (click)="closeQuoteAcepted(); items.bdisponible = false">
+              <span class="X"></span>
+              <span class="Y"></span>
+              <div class="close">Cerrar</div>
+            </button>
+          </div>
+          <hr class="black-hr">
+
+          <form [formGroup]="quotesFormGroup">
+            <div class="row">
+              <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Precio Unitario de Pieza Afectada</mat-label>
+                  <input type="number" matInput formControlName="munitariorepuesto" (change)="calculateTotalReplacement()">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Moneda</mat-label>
+                  <mat-select formControlName="cmoneda">
+                    <mat-option *ngFor="let i of coinList" [value]="i.id">{{i.value}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Cantidad disponible</mat-label>
+                  <input type="number" matInput formControlName="ncantidad" (change)="validateQuantity()">
+                </mat-form-field>
+              </div>    
+              <div class="col-sm-8">
+                <mat-form-field class="example-full-width">
+                  <mat-label>Precio Total de Pieza Afectada</mat-label>
+                  <input type="number" matInput formControlName="mtotalrepuesto" readonly>
+                </mat-form-field>
+              </div>      
+            </div>
+
+
+            <div class="row py-4 text-center">
+              <div class="col-sm-12">
+                <button class="learn-more form_bTn" (click)="resultFinalQuotes();">
+                  <span class="circle" aria-hidden="true">
+                    <span class="icon arrow"></span>
+                  </span>
+                  <span class="button-text">Aceptar</span>
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template> 
+
+  <ng-template #quoteAcep2 let-dialogRef="dialogRef">
+    <mat-dialog-content>
+      <div class="row form-container">
+        <div class="row">
+          <form [formGroup]="quotesFormGroup">
+            <div class="col-md-12 pt-1">
+              <div class="row justify-content-center h-100">
+                <div mat-dialog-title class="d-flex justify-content-between align-items-center py-3">
+                  <h2 class="notification-title">Cotización N° {{ccotizacion}}</h2>
+                  <button *ngIf="!quoteDetailsDisable && report != 'G'" class="learn-more form_bTn" (click)="closeQuotesAcepted()">
+                    <span class="circle" aria-hidden="true">
+                      <span class="icon arrow"></span>
+                    </span>
+                    <span class="button-text">Continuar</span>
+                  </button>
+                  <button *ngIf="!quoteDetailsDisable && report == 'G'" class="learn-more form_bTn" (click)="closeQuotesDeliveryAcepted()">
+                    <span class="circle" aria-hidden="true">
+                      <span class="icon arrow"></span>
+                    </span>
+                    <span style="padding-left: 10px;" class="button-text">Aceptar</span>
+                  </button>
+                </div>
+                <div style="padding: 0px !important; justify-content: stretch;" class="row mb-3">
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0" >
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Servicio a Cotizar
+                        <i class= "fi fi-rs-shipping-timed" style="font-size: 20px;"></i>
+                      </div>
+                      
+                      <div style="padding-top: 0px !important; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xservicioCotizacion}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0">
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Proveedor
+                        <i class= "fi fi-rr-wrench-alt" style="font-size: 20px;"></i>
+                      </div>
+                      <div style="padding-top: 0px; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xproveedor}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="align-self: stretch;" class="col-md-4">
+                    <div class="h-100 card rounded card-yellow mb-0">
+                      <div class="card-header text-center d-flex py-3 justify-content-center" style="gap: 7px; padding-bottom: 7px !important;">
+                        Observación
+                        <i class= "fi fi-rr-eye" style="font-size: 20px;"></i>
+                      </div>
+                      <div style="padding-top: 0px !important; padding-bottom: 15px;" class="card-body">
+                        <h5 class="card-text text-center">
+                          <strong>{{xobservacion}}</strong>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="black-hr">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="col-sm-12 py-3" *ngIf="report != 'G'">
+                      <p class="text-center" style="font-weight: 500" *ngIf="quotesFinallyAceptedList.length > 0">
+                        Piezas Afectadas Aceptadas
+                      </p>
+                      <table class="table table-striped" *ngIf="quotesFinallyAceptedList.length > 0 && cotizacionesAceptadas">
+                        <thead>
+                          <tr>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Pieza Afectada</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Cantidad</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Monto Unitario</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Monto Total por Pieza</h4>
+                            </th>
+                            <th scope="col">
+                              <div class="d-flex" style="gap: 10px;">
+                                <h4 style="font-weight: 500">Aceptar Cotización</h4>
+                                <div class="checkbox-wrapper-31">
+                                  <input type="checkbox" [checked]="selectAll" (change)="toggleAllSelections($event)">
+                                  <svg viewBox="0 0 35.6 35.6">
+                                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                  </svg>
+                                </div>
+                              </div>
+
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of quotesFinallyAceptedList" style="cursor: pointer;">
+                            <td>{{ item.xrepuesto }}</td>
+                            <td>{{ item.ncantidad }}</td>
+                            <td>{{ item.munitariorepuesto }}</td>
+                            <td>{{ item.mtotalrepuesto }}</td>
+                            <td>
+                              <div class="checkbox-wrapper-31">
+                                <input type="checkbox" [checked]="item.selected" (change)="toggleSelection2(item)">
+                                <svg viewBox="0 0 35.6 35.6">
+                                  <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                                  <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                                  <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                </svg>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table class="table table-striped" *ngIf="quotesFinallyAceptedList.length > 0 && !cotizacionesAceptadas">
+                        <thead>
+                          <tr>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Pieza Afectada</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Cantidad</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Monto Unitario</h4>
+                            </th>
+                            <th scope="col">
+                              <h4 style="font-weight: 500">Monto Total por Pieza</h4>
+                            </th>
+                            <th scope="col">
+                              <div class="d-flex flex-row" style="gap: 10px;">
+                                <div class="checkbox-wrapper-31" matTooltip="Aceptar toda la Cotización" matTooltipPosition="above">
+                                  <input *ngIf="quoteDetailsDisable" type="checkbox" disabled [checked]="selectAll" (change)="toggleAllSelections($event)">
+                                  <input *ngIf="!quoteDetailsDisable" type="checkbox" [checked]="selectAll" (change)="toggleAllSelections($event)">
+                                  <svg viewBox="0 0 35.6 35.6">
+                                    <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                                    <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                                    <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                  </svg>
+                                </div>
+                              </div>
+
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of quotesFinallyAceptedList" style="cursor: pointer;">
+                            <td>{{ item.xrepuesto }}</td>
+                            <td>{{ item.ncantidad }}</td>
+                            <td>{{ item.munitariorepuesto }}</td>
+                            <td>{{ item.mtotalrepuesto }}</td>
+                            <td>
+                              <div class="checkbox-wrapper-31">
+                                <input *ngIf="quoteDetailsDisable" type="checkbox" disabled [checked]="item.selected" (change)="toggleSelection2(item)">
+                                <input *ngIf="!quoteDetailsDisable" type="checkbox" [checked]="item.selected" (change)="toggleSelection2(item)">
+                                <svg viewBox="0 0 35.6 35.6">
+                                  <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                                  <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                                  <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                </svg>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-sm-12" *ngIf="report == 'G'">
+                      <p class="text-center" style="font-weight: 500" *ngIf="quotesFinallyAceptedList.length > 0">
+                        Detalles de la Grúa
+                      </p>
+                      <div *ngFor="let delivery of quotesFinallyAceptedList">
+                        <div class="row py-4">
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Lugar de Origen</mat-label>
+                              <textarea disabled rows="1" matInput [(value)]="delivery.xorigen_grua"></textarea>
+                            </mat-form-field>
+                          </div>
+        
+                          <div class="col-md-6">
+                            <mat-form-field class="example-full-width">
+                              <mat-label>Lugar de Destino</mat-label>
+                              <textarea disabled rows="1" matInput [(value)]="delivery.xdestino_grua"></textarea>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <h4 class="text-end" *ngIf="quotesFinallyAceptedList.length > 0"><strong>Subtotal:</strong> {{delivery.mtotal}} {{delivery.xmoneda}}</h4>
+                        <h4 class="text-end" *ngIf="quotesFinallyAceptedList.length > 0"><strong>Total con IVA:</strong> {{delivery.mtotalcotizacion}} {{delivery.xmoneda}}</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+  
+  
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </mat-dialog-content>
+  </ng-template>

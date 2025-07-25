@@ -1,0 +1,465 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header d-flex align-items-center justify-content-between">
+            <h4 class="card-title text-center"> Creación de Afiliación Arys</h4>
+          </div>
+          <div class="card-body text-center">
+            <mat-stepper [linear]="isLinear" #stepper>
+              <mat-step [stepControl]="personsFormGroup">
+                <!-- <app-step-one [personsFormGroup]="personsFormGroup" [pruebaValue]="prueba" (changePersonFormGroupValue)="changePersonFormGroupValue($event)" (clearValidatorsPersonFormGroup)="clearValidatorsPersonFormGroup($event)" ></app-step-one> -->
+                <form (keydown)="checkPressEnter($event)" id="personsFormGroup" name="personsFormGroup" [formGroup]="personsFormGroup">
+                  <ng-template matStepLabel (click)="onNextStep()">Datos Personales</ng-template>
+                  <div class="row">
+                      <div class="col-4 col-md-2 ">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Tipo Doc. Identidad</mat-label>
+                              <input type="text"
+                                     placeholder="Seleccione"
+                                     aria-label="Seleccione"
+                                     matInput
+                                     [formControl]="oneStepControls.identControl"
+                                     [matAutocomplete]="ident"
+                                     required>
+                                    <mat-autocomplete #ident="matAutocomplete" (optionSelected)="onIdentSelection($event)">
+                                      <mat-option *ngFor="let ident of filteredIdent | async" [value]="ident">
+                                        {{ ident }}
+                                      </mat-option>
+                                    </mat-autocomplete>
+                            </mat-form-field>
+                      </div>
+                      <div class="col-8 col-md-4 ">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Identificación</mat-label>
+                              <input (keydown)="checkPress($event)" matInput placeholder="Identificación" formControlName="xrif_cliente" (change)="searchPropietary()" required>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3" *ngIf="activaNombreYapellido" >
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Nombre</mat-label>
+                              <input matInput placeholder="Nombre" formControlName="xnombre" required>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3" *ngIf="activaNombreYapellido" >
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Apellido</mat-label>
+                              <input matInput placeholder="Apellido" formControlName="xapellido">
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-6" *ngIf="activaRepresentante" >
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Nombre Representante</mat-label>
+                            <input matInput placeholder="Nombre Representante" formControlName="xnombre" >
+                        </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Teléfono</mat-label>
+                              <input matInput placeholder="Teléfono" formControlName="xtelefono_emp" required>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Correo</mat-label>
+                              <input matInput placeholder="Correo" formControlName="email" required>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width">
+                              <mat-label>Estado</mat-label>
+                              <input type="text"
+                                     placeholder="Seleccione Estado"
+                                     aria-label="Seleccione"
+                                     matInput
+                                     [formControl]="oneStepControls.stateControl"
+                                     [matAutocomplete]="state"
+                                     formControlName="xestado"
+                                     required>
+                                     <mat-autocomplete #state="matAutocomplete" (optionSelected)="onStateSelection($event)">
+                                      <mat-option *ngFor="let state of filteredState | async" [value]="state">
+                                        {{ state }}
+                                      </mat-option>
+                                    </mat-autocomplete>
+                            </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <mat-form-field class="example-full-width" >
+                              <mat-label>Ciudad</mat-label>
+                              <input type="text"
+                                     placeholder="Seleccione Ciudad"
+                                     aria-label="Seleccione"
+                                     matInput
+                                     [formControl]="oneStepControls.cityControl"
+                                     [matAutocomplete]="city"
+                                     formControlName="xciudad"
+                                     required>
+                                     <mat-autocomplete #city="matAutocomplete" (optionSelected)="onCitySelection($event)">
+                                      <mat-option *ngFor="let city of filteredCity | async" [value]="city">
+                                        {{ city }}
+                                      </mat-option>
+                                    </mat-autocomplete>
+                            </mat-form-field>
+                      </div>
+                  </div>
+          
+                  <div class="row">
+                    <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Dirección</mat-label>
+                            <textarea  matInput placeholder="Direccion" formControlName="xdireccion" required></textarea>
+                        </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <div class="row py-5">
+                    <div class="col-12 col-md-2">
+                      <button class="w-100" mat-button (click)="onNextStep()" style="background: #fcb203;">Continuar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="vehicleFormGroup" label="Datos del Vehículo" (click)="onNextStepV()">
+                <form [formGroup]="vehicleFormGroup">
+                  <div class="row">
+                    <div class="col-4 col-md-3" *ngIf="activateBrandList">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Año</mat-label>
+                        <input matInput type="number" placeholder="Año" formControlName="fano" [maxlength]="4" (change)="changeYears()" required>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-8 col-md-3" *ngIf="activateBrandList">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Marca</mat-label>
+                          <input type="text"
+                                 placeholder="Seleccione Marca"
+                                 aria-label="Seleccione"
+                                 matInput
+                                 [formControl]="twoStepControls.brandControl"
+                                 [matAutocomplete]="brand"
+                                 required>
+                                 <mat-autocomplete #brand="matAutocomplete" (optionSelected)="onBrandSelection($event)">
+                                  <mat-option *ngFor="let brand of filteredBrand | async" [value]="brand">
+                                    {{ brand }}
+                                  </mat-option>
+                                </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="activateBrandText">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Marca</mat-label>
+                        <input matInput formControlName="xmarca">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="activateBrandList">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Modelo</mat-label>
+                        <input type="text"
+                              placeholder="Seleccione Modelo"
+                              aria-label="Seleccione"
+                              matInput
+                              [formControl]="twoStepControls.modelControl"
+                              [matAutocomplete]="model"
+                              required>
+                              <mat-autocomplete #model="matAutocomplete" (optionSelected)="onModelSelection($event)">
+                                <mat-option *ngFor="let model of filteredModel | async" [value]="model">
+                                  {{ model }}
+                                </mat-option>
+                              </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-3" *ngIf="activateBrandText">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput formControlName="xmodelo">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="activateBrandList">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Version</mat-label>
+                        <input type="text"
+                              placeholder="Seleccione Version"
+                              aria-label="Seleccione"
+                              matInput
+                              [formControl]="twoStepControls.versionControl"
+                              [matAutocomplete]="version"
+                              required>
+                              <mat-autocomplete #version="matAutocomplete" (optionSelected)="onVersionSelection($event)">
+                                <mat-option *ngFor="let version of filteredVersion | async" [value]="version">
+                                  {{ version }}
+                                </mat-option>
+                              </mat-autocomplete>
+                      </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <div class="row">
+          
+                    <div class="col-md-3" *ngIf="activateBrandText">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Version</mat-label>
+                        <input matInput formControlName="xversion">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Pasajeros</mat-label>
+                        <input matInput formControlName="npasajeros" >
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="example-full-width">
+                          <mat-label>Color</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Color"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="twoStepControls.colorControl"
+                                [matAutocomplete]="color"
+                                required>
+                                <mat-autocomplete #color="matAutocomplete" (optionSelected)="onColorSelection($event)">
+                                  <mat-option *ngFor="let color of filteredColor | async" [value]="color">
+                                    {{ color }}
+                                  </mat-option>
+                                </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Placa</mat-label>
+                        <input matInput placeholder="Placa" formControlName="xplaca" [maxlength]="7" (change)="searchVehicle()" required (input)="valueplate($event)">
+                      </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <hr class="my-4">
+                  <h2  style="text-align: start;">Especificaciones del Vehículo</h2>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Serial de Carroceria</mat-label>
+                        <input matInput placeholder="Serial de Carroceria" formControlName="xserialcarroceria" [maxlength]="17" required (input)="valueSerial($event)">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field class="example-full-width">
+                        <mat-label>Serial de Motor</mat-label>
+                        <input matInput placeholder="Serial de Motor" formControlName="xserialmotor" [maxlength]="17" (input)="valueSerialMotor($event)">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="activateTypeVehicle">
+                      <mat-form-field class="example-full-width">
+                          <mat-label>Tipo de Vehiculo</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Tipo de Vehiculo"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="twoStepControls.typeVehicleControl"
+                                [matAutocomplete]="typeVehicle"
+                                required>
+                          <mat-autocomplete #typeVehicle="matAutocomplete" (optionSelected)="onTypeVehicleSelection($event)">
+                            <mat-option *ngFor="let typeVehicle of filteredTypeVehicle | async" [value]="typeVehicle">
+                              {{ typeVehicle }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="activateUtility">
+                      <mat-form-field class="example-full-width">
+                          <mat-label>Uso</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Uso"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="twoStepControls.utilityControl"
+                                [matAutocomplete]="utilityL"
+                                >
+                          <mat-autocomplete #utilityL="matAutocomplete" (optionSelected)="onUtilitySelection($event)">
+                            <mat-option *ngFor="let utility of filteredUtility | async" [value]="utility">
+                              {{ utility }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <div class="row py-5">
+                    <div class="col-6 col-md-2">
+                      <button mat-button matStepperPrevious>Regresar</button>
+                    </div>
+                    <div class="col-6 col-md-2">
+                      <button mat-button style="background: #fcb203;" (click)="onNextStepV()">Continuar</button>
+                    </div>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="planFormGroup" label="Detalles del plan">
+                <form [formGroup]="planFormGroup">
+                  <div class="row justify-content-center">
+                    <div class="col-md-6">
+                      <div class="col-md-12" *ngIf="type == 'corporate'">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Compañía</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Compañía"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="threeStepControls.companiaControl"
+                                [matAutocomplete]="compania"
+                                required>
+                          <mat-autocomplete #compania="matAutocomplete" (optionSelected)="onCompaniaSelection($event)">
+                            <mat-option *ngFor="let compania of filteredCompania | async" [value]="compania">
+                              {{ compania }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Planes</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Planes"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="threeStepControls.planControl"
+                                [matAutocomplete]="plan"
+                                required>
+                          <mat-autocomplete #plan="matAutocomplete" (optionSelected)="onPlanSelection($event)">
+                            <mat-option *ngFor="let plan of filteredPlan | async" [value]="plan">
+                              {{ plan }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-12">
+                        <mat-form-field class="example-full-width">
+                          <mat-label>Metodología de Pago</mat-label>
+                          <input type="text"
+                                placeholder="Seleccione Metodología de Pago"
+                                aria-label="Seleccione"
+                                matInput
+                                [formControl]="threeStepControls.methodOfPaymentControl"
+                                [matAutocomplete]="method"
+                                formControlName="xmetodologiapago"
+                                required>
+                          <mat-autocomplete #method="matAutocomplete" (optionSelected)="onMethodOfPaymentSelection($event)">
+                            <mat-option *ngFor="let Payment of filteredMethodOfPayment | async" [value]="Payment">
+                              {{ Payment }}
+                            </mat-option>
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </div>
+                      <div class="row" style="width: 100%; margin:0;">
+                        <div class="col-md-6">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Fecha Desde</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="fdesde" (dateChange)="calcularFechaHasta($event)">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                          <mat-form-field class="example-full-width">
+                            <mat-label>Fecha Hasta</mat-label>
+                            <input matInput [matDatepicker]="fhastaP" formControlName="fhasta">
+                            <mat-datepicker-toggle matSuffix [for]="fhastaP"></mat-datepicker-toggle>
+                            <mat-datepicker #fhastaP></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="col-12 justify-content-center pb-3">
+                        <div class="plan" *ngIf="activateCardService">
+                          <p style="font-size: 10px; text-align:start; margin-bottom: 15px; margin-top: -15px;">Vista previa</p>
+                          <div class="inner">
+                            <span class="pricing">
+                              <span>
+                                {{montoTotal}}$ <small>/ Anual</small>
+                              </span>
+                            </span>
+                            <p class="title">Tipo de Servicios</p>
+                            <p class="info">Estos son los Tipos de Servicios contratados por el Plan.</p>
+                            <ul class="features">
+                              <li *ngFor="let service of serviceList">
+                                <span class="icon">
+                                  <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0h24v24H0z" fill="none"></path>
+                                    <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
+                                  </svg>
+                                </span>
+                                <span><strong>{{ service.name }}</strong></span>
+                              </li>
+                            </ul>
+                            <div class="action" *ngIf="submit">
+                              <a class="button" (click)="onSubmit()" style="cursor: pointer;">
+                                Generar Afiliación
+                              </a>
+                            </div>
+                            <div class="hourglassBackground" *ngIf="loading">
+                              <div class="hourglassContainer">
+                                <div class="hourglassCurves"></div>
+                                <div class="hourglassCapTop"></div>
+                                <div class="hourglassGlassTop"></div>
+                                <div class="hourglassSand"></div>
+                                <div class="hourglassSandStream"></div>
+                                <div class="hourglassCapBottom"></div>
+                                <div class="hourglassGlass"></div>
+                              </div>
+                            </div>
+
+
+                            <a class="card-check credentialing" href="#" *ngIf="check">
+                              <div class="overlay"></div>
+                              <div class="circle">
+                                
+                                <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="27 21 64 72" height="72px" width="64px">
+                                
+                                <defs>
+                                    <polygon points="60.9784821 18.4748913 60.9784821 0.0299638385 0.538377293 0.0299638385 0.538377293 18.4748913" id="path-1"></polygon>
+                                </defs>
+                                <g transform="translate(27.000000, 21.000000)" fill-rule="evenodd" fill="none" stroke-width="1" stroke="none" id="Group-12">
+                                    <g id="Group-5">
+                                        <g transform="translate(2.262327, 21.615176)" id="Group-3">
+                                            <mask fill="white" id="mask-2">
+                                                
+                                            </mask>
+                                            <g id="Clip-2"></g>
+                                            <path mask="url(#mask-2)" fill="#59A785" id="Fill-1" d="M7.17774177,18.4748913 L54.3387782,18.4748913 C57.9910226,18.4748913 60.9789911,15.7266455 60.9789911,12.3681986 L60.9789911,6.13665655 C60.9789911,2.77820965 57.9910226,0.0299638385 54.3387782,0.0299638385 L7.17774177,0.0299638385 C3.52634582,0.0299638385 0.538377293,2.77820965 0.538377293,6.13665655 L0.538377293,12.3681986 C0.538377293,15.7266455 3.52634582,18.4748913 7.17774177,18.4748913"></path>
+                                        </g>
+                                        <polygon points="62.0618351 55.9613216 7.2111488 60.3692832 1.50838775 5.79374073 56.3582257 1.38577917" transform="translate(31.785111, 30.877531) rotate(-2.000000) translate(-31.785111, -30.877531)" fill="#FFFFFF" id="Fill-4"></polygon>
+                                        <ellipse ry="9.17325562" rx="9.95169733" cy="21.7657707" cx="30.0584472" opacity="0.216243004" fill="#25D48A" id="Oval-3"></ellipse>
+                                        <g fill="#54C796" transform="translate(16.959615, 6.479082)" id="Group-4">
+                                            <polygon points="10.7955395 21.7823628 0.11873799 11.3001058 4.25482787 7.73131106 11.0226557 14.3753897 27.414824 1.77635684e-15 31.3261391 3.77891399" id="Fill-6"></polygon>
+                                        </g>
+                                        <path fill="#59B08B" id="Fill-8" d="M4.82347935,67.4368303 L61.2182039,67.4368303 C62.3304205,67.4368303 63.2407243,66.5995595 63.2407243,65.5765753 L63.2407243,31.3865871 C63.2407243,30.3636029 62.3304205,29.5263321 61.2182039,29.5263321 L4.82347935,29.5263321 C3.71126278,29.5263321 2.80095891,30.3636029 2.80095891,31.3865871 L2.80095891,65.5765753 C2.80095891,66.5995595 3.71126278,67.4368303 4.82347935,67.4368303"></path>
+                                        <path fill="#4FC391" id="Fill-10" d="M33.3338063,67.4368303 L61.2181191,67.4368303 C62.3303356,67.4368303 63.2406395,66.5995595 63.2406395,65.5765753 L63.2406395,31.3865871 C63.2406395,30.3636029 62.3303356,29.5263321 61.2181191,29.5263321 L33.3338063,29.5263321 C32.2215897,29.5263321 31.3112859,30.3636029 31.3112859,31.3865871 L31.3112859,65.5765753 C31.3112859,66.5995595 32.2215897,67.4368303 33.3338063,67.4368303"></path>
+                                        <path fill="#FEFEFE" id="Fill-15" d="M29.4284029,33.2640869 C29.4284029,34.2202068 30.2712569,34.9954393 31.3107768,34.9954393 C32.3502968,34.9954393 33.1931508,34.2202068 33.1931508,33.2640869 C33.1931508,32.3079669 32.3502968,31.5327345 31.3107768,31.5327345 C30.2712569,31.5327345 29.4284029,32.3079669 29.4284029,33.2640869"></path>
+                                        <path fill="#5BD6A2" id="Fill-12" d="M8.45417501,71.5549073 L57.5876779,71.5549073 C60.6969637,71.5549073 63.2412334,69.2147627 63.2412334,66.3549328 L63.2412334,66.3549328 C63.2412334,63.4951029 60.6969637,61.1549584 57.5876779,61.1549584 L8.45417501,61.1549584 C5.34488919,61.1549584 2.80061956,63.4951029 2.80061956,66.3549328 L2.80061956,66.3549328 C2.80061956,69.2147627 5.34488919,71.5549073 8.45417501,71.5549073"></path>
+                                    </g>
+                                </g>
+                                </svg>
+                            
+                              </div>
+                              <p><strong>{{message}}</strong></p>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+                </form>
+            </mat-step>
+            </mat-stepper>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

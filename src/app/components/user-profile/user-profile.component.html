@@ -1,0 +1,214 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between">
+          <h4 class="card-title">Perfil del Usuario</h4>
+          <button type="button" class="btn btn-primary" (click)="saveInfo()">Guardar</button>
+        </div>
+        <div class="card-body">
+          <form id="user-data">
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Compañía</mat-label>
+                  <input matInput type="text" placeholder="Ingresa datos" [value]="xcompania" disabled name="xcompania">
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Cedula</mat-label>
+                  <span matPrefix>{{userData.icedula}}- &nbsp;</span>
+                  <input matInput type="text" placeholder="Ingresa datos" #xcedula [value]="userData.xcedula" disabled name="xcedula">
+                </mat-form-field>
+              </div>
+              <div class="col-md-5">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Email</mat-label>
+                  <input matInput type="email" placeholder="Ingresa datos" #xemail [(ngModel)]="userData.xemail" name="xemail">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Nombre</mat-label>
+                  <input style="text-transform: capitalize;" matInput placeholder="Ingresa datos" #xnombre [value]="userData.xnombre" disabled name="xnombre">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Apellido</mat-label>
+                  <input matInput style="text-transform: capitalize;" placeholder="Ingresa datos" #xapellido [value]="userData.xapellido" disabled name="xapellido">
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Teléfono</mat-label>
+                  <input type="tel" matInput style="text-transform: capitalize;" placeholder="Ingresa datos" #xtelefono [(ngModel)]="userData.xtelefono" name="xtelefono">
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="user-form-field" >
+                  <mat-label>Dirección</mat-label>
+                  <textarea matInput placeholder="Ingresa datos" #xdireccion [value]="userData.xdireccion" disabled name="xdireccion"></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>País</mat-label>
+                  <mat-select #cpais style="text-transform: capitalize;" [(value)]="userData.cpais" name="cpais" disabled>
+                    <mat-option [value]="" disabled="true">Selecciona algún País</mat-option>
+                    <mat-option style="text-transform: capitalize;" *ngFor="let pais of paisesValues" [value]="pais.value">
+                      {{pais.text}} (+{{pais.value}})
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Estado</mat-label>
+                  <mat-select #cestado [(value)]="userData.cestado" name="cestado" disabled>
+                    <mat-option [value]="" disabled="true">Selecciona algún estado</mat-option>
+                    <mat-option *ngFor="let estado of estadosValues" [value]="estado.value">
+                      {{estado.text}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Ciudad</mat-label>
+                  <mat-select #cciudad [(value)]="userData.cciudad" name="cciudad" disabled>
+                    <mat-option [value]="" disabled="true">Selecciona alguna Ciudad</mat-option>
+                    <mat-option *ngFor="let ciudad of ciudadesValues" [value]="ciudad.value">
+                      {{ciudad.text}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <hr style="border-top: 1px solid rgba(0, 0, 0, 1); margin: 20px 0px;">
+            <div class="row pt-3">
+              <div class="col-md-4">
+                <mat-form-field class="user-form-field">
+                  <mat-label>Contaseña</mat-label>
+                  <input [disabled]="disabledPassword" [type]="passwordVisible ? 'text' : 'password'" matInput placeholder="Ingresa datos" #xcontrasena [(ngModel)]="userData.xcontrasena" name="xcontrasena">
+                  <mat-icon *ngIf="!disabledPassword" (click)="passwordVisible = !passwordVisible" matSuffix>{{passwordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  <button *ngIf="disabledPassword" type="button" class="btn btn-primary m-0 d-flex" style="padding: 3px; position: absolute; top: 0; right: 0;" data-bs-toggle="modal" data-bs-target="#confirmPassword">
+                    <mat-icon style="font-size: 10px; margin: 0; height: auto; width: auto;">edit</mat-icon>
+                  </button>
+                  <div style="margin: auto !important;" class="modal fade" id="confirmPassword" tabindex="-1" aria-labelledby="confirmaPasswordModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" style="max-width: 800px !important;">
+                      <form class="modal-content" (submit)="checkPassword()">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="confirmaPasswordModalLabel">Cambio de Contraseña</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <h4>¿Estás seguro que deseas cambiar la contraseña?</h4>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <mat-form-field class="user-form-field">
+                                <mat-label>Ingresa tu Contraseña Actual</mat-label>
+                                <input matInput [type]="changePasswordVisible ? 'text' : 'password'" placeholder="Ingresa Contraseña" #changeContrasena [(ngModel)]="changePassword">
+                                <mat-icon (click)="changePasswordVisible = !changePasswordVisible" matSuffix>{{changePasswordVisible ? 'visibility_off' : 'visibility'}}</mat-icon>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button id="closeModalButtonClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          <button type="submit" class="ml-2 btn btn-primary">
+                            Checkear Contraseña
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-user">
+        <div class="image" style="position: relative;">
+          <img id="image_profile" [src]="userData.ximagen2 ? environmentV.apiUrl + userData.ximagen2 : '../assets/img/bg5.jpg'" alt="...">
+          <input hidden (change)="onFileSelected($event, 'background_img', 'ximagen2', 39/20)" #backgroundInput type="file" id="file" accept="image/*">
+          <button type="button" mat-mini-fab color="primary" style="position: absolute; bottom: 10px; right: 10px;" (click)="backgroundInput.click()">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="author">
+            <div class="d-flex justify-content-center align-items-center flex-column">
+              <div style="position: relative; width: fit-content;">
+                <img class="avatar border-gray" [src]="userData.ximagen1 ? environmentV.apiUrl + userData.ximagen1 : '../assets/img/chavo.jpg'" alt="...">
+                <button type="button" mat-mini-fab class="bg-yellow-primary" style="position: absolute; top: 0; left: 0;" (click)="avatarInput.click()">
+                  <i class="fa-solid fa-camera"></i>
+                </button>
+              </div>
+              
+              <input hidden (change)="onFileSelected($event, 'profile_img', 'ximagen1', 1)" #avatarInput type="file" id="file-avatar" accept="image/*">
+              <h5 class="title-user" style="text-transform: capitalize;">
+                <b>{{userData.xnombre}} {{userData.xapellido}}</b>
+              </h5>
+              <button class="btn d-flex align-items-center m-0" style="font-size: 10px; gap:5px; padding: 6px;" data-bs-toggle="modal" data-bs-target="#documentsModal">
+                Ver Documentos
+                <mat-icon style="font-size: 12px; width: auto; height: auto;">description</mat-icon>
+              </button>
+              <app-documents *ngIf="userData.documents" [userData]="userData" (uploadedFile)="uploadedFile($event)" (uploadedFiles)="uploadedFiles($event)"></app-documents>
+            </div>
+            <hr style="border-top: 1px solid rgba(0, 0, 0, 1); margin: 20px 0px 20px;">
+            <span *ngIf="userData.subscription">
+              <div class="d-flex flex-column" *ngFor="let sub of userData.subscription">
+
+                <span [class]="'w-100 badge '+sub.xplancolor+'-badge'">
+                  {{ sub.xplan }}
+                  <i [class]="'ml-1 '+sub.xplanicon"></i>
+                </span>
+                <div class="button-container my-3">
+        
+                  <app-modal-car *ngIf="userData.subscription" [subscription]="sub" [userData]="userData"></app-modal-car>
+        
+                </div>
+              </div>
+              
+            </span>
+          </div>
+        </div>
+        <button id="cropButtonModalHidden" style="display: none;" type="button" data-bs-toggle="modal" data-bs-target="#cropImage">Launch modal</button>
+        <div class="modal fade" id="cropImage" tabindex="-1" aria-labelledby="cropImageLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" style="max-width: 800px !important;">
+            <div class="modal-content">
+              <div class="modal-body">
+                <image-cropper
+                [imageFile]="imageFile"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="aspectRatio"
+                (imageCropped)="imageCropped($event)"
+                ></image-cropper>
+              </div>
+              <div class="modal-footer">
+                <button id="closeModalButtonClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" (click)="cropImage()" class="ml-2 btn">
+                  Guardar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

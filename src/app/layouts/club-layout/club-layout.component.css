@@ -1,0 +1,17 @@
+.load-screen {
+  display: block;
+  position:fixed;
+  z-index: 100000 !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  background-color: white;
+  transition: background-color 0.7s ease-in-out; 
+}
+.loading-screen {
+  background-color: transparent;
+}
+.loaded-screen {
+  display: none !important;
+}

@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "module": "es2020",
+    "baseUrl": "",
+    "types": [],
+    "target": "es6",
+    "lib": [
+      "es2020",
+      "dom",
+      "dom.iterable" // <- there you are
+    ],
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

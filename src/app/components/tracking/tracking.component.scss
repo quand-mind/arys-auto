@@ -1,0 +1,56 @@
+.card-events {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+.tracking-item-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 1rem;
+}
+.tracking-square {
+  width: 20px;
+  height: 15px;
+  border-radius: 4px;
+  display: inline-block;
+  box-shadow: 0 2px 1px -1px #0003, 0 1px 1px #00000024, 0 1px 3px #0000001f
+}
+.square-green {
+  background-color: rgb(36, 173, 36);
+}
+
+.square-yellow {
+  background-color: rgb(255, 240, 30);
+}
+.square-red {
+  background-color: rgb(212, 12, 12);
+}
+@media (min-width: 768px){
+  
+  .weight-bold-md {
+    font-weight: 700;
+    color: black;
+  }
+  .no-weight-md {
+    // font-weight: 700;
+    margin-bottom: 15px;
+  }
+  .tr-1 {
+    width: 100%;
+    padding-bottom: 0px;
+  }
+  .tr-2 {
+    width: 100%;
+    padding: 0 .5rem 1.5rem !important;
+  }
+  .tr-3{
+    width: 60%;
+    padding: 0 .5rem !important;
+  }
+  .tr-4{
+    width: 40%;
+    padding: 0 .5rem !important;
+  }
+}

@@ -1,0 +1,42 @@
+
+.badge {
+  padding: 0.5em 0.8em;
+  line-height: 1.7;
+  white-space: inherit !important;
+  font-size: 65%;
+}
+.gold-badge {
+  background-color: rgb(221, 187, 74);
+  color: white;
+}
+.diamond-badge {
+  background-color: rgb(76, 218, 218);
+  color: black;
+}
+.plus-badge {
+  background-color: rgb(224, 42, 73);
+  color: white;
+}
+.basic-badge {
+  background-color: rgb(18, 46, 202);
+  color: white;
+}
+.title-user {
+  margin: 0px 0px 5px;
+}
+
+
+.button-check-info {
+  white-space: inherit !important;
+  line-height: 1.5rem;
+  padding: 7px 16px;
+}
+.description {
+  margin: 12px 0px 0px;
+}
+.bg-yellow-primary {
+  background-color: #fcb203!important;
+}
+.bg-yellow-primary:hover {
+  background-color: #b59d32 !important;
+}

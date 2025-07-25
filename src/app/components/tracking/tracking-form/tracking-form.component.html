@@ -1,0 +1,77 @@
+<div class="panel-header">
+  <div class="header text-center">
+    <h2 class="title">{{title}}</h2>
+
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-12 card">
+
+      <mat-stepper #allStepper>
+        <!-- {{steps.length}} -->
+        <mat-step [id]="step.id" *ngFor="let step of steps">
+          <ng-template matStepLabel>{{step.name}}</ng-template>
+          <ng-template matStepContent>
+            <div class="row">
+              <mat-form-field *ngFor="let input of step.data" appearance="fill" [class]="input.class">
+                <mat-label>{{input.text}}</mat-label>
+                <input matInput [(ngModel)]="input.controlValue" required disabled>
+              </mat-form-field>
+            </div>
+            <mat-stepper *ngIf="step.values" orientation="vertical">
+              <mat-step [id]="substep.id" *ngFor="let substep of step.values; let i = index; let first = first ;let last = last;">
+                <ng-template matStepLabel>{{substep.name}}</ng-template>
+                <ng-template matStepContent>
+                  <div class="row">
+                    <div *ngFor="let input of substep.data" [class]="input.class">
+                      <mat-form-field class="w-100" *ngIf="input.type == 'text' || input.type == 'email' || input.type == 'number' || input.type == 'date' || input.type == 'time' || input.type == 'tel'" appearance="fill">
+                        <mat-label>{{input.text}}</mat-label>
+                        <input [type]="input.type" matInput [(ngModel)]="input.controlValue" required disabled>
+                      </mat-form-field>
+                      <mat-form-field class="w-100" *ngIf="input.type == 'textarea'" appearance="fill">
+                        <mat-label>{{input.text}}</mat-label>
+                        <textarea matInput [(ngModel)]="input.controlValue" required disabled>
+                        </textarea>
+                      </mat-form-field>
+                      <section style="gap: 15px;" class="mt-1 d-flex flex-row-reverse justify-content-end" *ngIf="input.type == 'slide'">
+                        <small style="margin-top: 2px;  line-height: 16px;">{{input.text}}</small>
+                        <span class="d-flex flex-column">
+                          <mat-slide-toggle disabled [(ngModel)]="input.controlValue"></mat-slide-toggle>
+                          <small style="margin-top: -4px;" class="d-flex justify-content-between">
+                            <small>No</small>
+                            <small>-</small>
+                            <small>Si</small>
+                          </small>
+                        </span>
+                      </section>
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <button *ngIf="!first" mat-button matStepperPrevious>Anterior</button>
+                    <button *ngIf="!last" mat-button matStepperNext>Siguiente</button>
+                  </div>
+                </ng-template>
+              </mat-step>
+            </mat-stepper>
+          </ng-template>
+        </mat-step>
+        <!-- <mat-step>
+          <ng-template matStepLabel>Step 2</ng-template>
+          <ng-template matStepContent>
+            <p>This content was also rendered lazily</p>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext>Next</button>
+          </ng-template>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>Step 3</ng-template>
+          <p>This content was rendered eagerly</p>
+          <button mat-button matStepperPrevious>Back</button>
+        </mat-step> -->
+      </mat-stepper>
+
+    </div>
+  </div>
+</div>

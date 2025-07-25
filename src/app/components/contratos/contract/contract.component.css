@@ -1,0 +1,36 @@
+table {
+    width: 100%;
+  }
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+
+.shadow {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@media screen and (max-width: 720px) {
+  .description-contracts-create {
+    margin: 0px 15px 15px;
+  }
+}
+
+.mat-column-ccontratoflota {
+  width: 44px;
+}
+.mat-column-xcompania {
+  max-width: 120px;
+}
+.cdk-footer-cell {
+  border: 0px !important;
+  background: #fcb2038c!important;
+}
+tfoot {
+  height: 70px;
+}

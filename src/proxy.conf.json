@@ -1,0 +1,13 @@
+{
+    "/repository/*": {
+        "target": "http://apisarys.arysauto.com/",
+        "secure": false,
+        "logLevel": "debug"
+    },
+
+    "*": {
+        "target": "http://sarys.arysauto.com/",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

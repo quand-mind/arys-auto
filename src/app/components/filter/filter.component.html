@@ -1,0 +1,26 @@
+<div style="padding: 0px 15px; margin-top: 5px;" *ngIf="filtersData.length > 0">
+  <mat-accordion>
+    <mat-expansion-panel (opened)="filterOpenState = true" (closed)="filterOpenState = false">
+      <mat-expansion-panel-header style="background-color: #fcb2038c;">
+        <mat-panel-title>
+          <b>FILTROS</b>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row">
+        <div class="col-md-3" *ngFor="let filter of filtersData" >
+          <mat-form-field class="example-full-width" >
+            <mat-label>{{filter.title}}</mat-label>
+            <mat-select (selectionChange)="addFilterAndSearch(filter.key, filter.controlValue)" [(value)]="filter.controlValue">
+              <mat-option value="">
+                Sin filtros
+              </mat-option>
+              <mat-option *ngFor="let item of filter.data" [value]="item.value">
+                {{item.text}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

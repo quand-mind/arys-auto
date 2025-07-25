@@ -1,0 +1,122 @@
+<div class="modal fade" id="documentsModal" tabindex="-1" aria-labelledby="documentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 800px !important;">
+    <div class="modal-content" style="max-height: 90%; overflow-y: auto;">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 mb-0" id="confirmaPasswordModalLabel">Documentos</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" style="padding-bottom: 5px;">
+          <div class="col-6">
+            <div class="d-flex flex-column align-items-start">
+              <div class="d-flex flex-column width-50-desk" style="gap: 10px">
+                <label class="form-label pl-2">Cédula</label>
+                <div style="position: relative;">
+                  <pdf-viewer (click)="openFile(cedulaFile)" *ngIf="cedulaFile"
+                    [src]="environment.apiUrl + cedulaFile.xrutadocumento"
+                    [fit-to-page]="true"
+                    [original-size]="false"
+                    [page]="1"
+                    [show-all]="false"
+                    [autoresize]="true"
+                    class="thumbnail_pdf open_file"
+                    style="height: 0px; padding-bottom: 100%;"
+                  >
+                    
+                  </pdf-viewer>
+                  <small *ngIf="cedulaFile" (click)="openFile(cedulaFile)" style="z-index: 12; position: absolute; bottom: 2px; right: 7px; font-size: 9px; color: white;" class="open_file">{{cedulaFile.name}}</small>
+                  <div *ngIf="cedulaFile" (click)="openFile(cedulaFile)" class="thumb-border open_file"></div>
+                </div>
+                
+                <button *ngIf="!cedulaFile" style="height: fit-content;" class="btn btn-primary m-0" (click)="addFile('fileCedula')">
+                  Agregar
+                  <i class="ml-1 fa-solid fa-plus"></i>
+                </button>
+                <button *ngIf="cedulaFile" style="height: fit-content;" class="btn btn-primary m-0" (click)="addFile('fileCedula')">
+                  Cambiar
+                  <i class="ml-1 fa-solid fa-arrows-rotate"></i>
+                </button>
+                <input id="fileCedula" class="mt-2" style="display:none" type="file"(change)="handleUploaderEvent($event, 'docidentidad')" accept="application/pdf">
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="d-flex flex-column align-items-start">
+              
+              <div class="d-flex flex-column width-50-desk" style="gap: 10px">
+                <label class="form-label pl-2">Licencia</label>
+                <div style="position: relative;">
+                  <pdf-viewer (click)="openFile(licenciaFile)" *ngIf="licenciaFile"
+                    [src]="environment.apiUrl + licenciaFile.xrutadocumento"
+                    [fit-to-page]="true"
+                    [original-size]="false"
+                    [page]="1"
+                    [show-all]="false"
+                    [autoresize]="true"
+                    class="thumbnail_pdf open_file"
+                    style="height: 0px; padding-bottom: 100%;"
+                  >
+                    
+                  </pdf-viewer>
+                  <small *ngIf="licenciaFile" (click)="openFile(licenciaFile)" style="z-index: 12; position: absolute; bottom: 2px; right: 7px; font-size: 9px; color: white;" class="open_file">{{licenciaFile.name}}</small>
+                  <div *ngIf="licenciaFile" (click)="openFile(licenciaFile)" class="thumb-border open_file"></div>
+                </div>
+                
+                <button *ngIf="!licenciaFile" style="height: fit-content;" class="btn btn-primary m-0" (click)="addFile('fileLicencia')">
+                  Agregar
+                  <i class="ml-1 fa-solid fa-plus"></i>
+                </button>
+                <button *ngIf="licenciaFile" style="height: fit-content;" class="btn btn-primary m-0" (click)="addFile('fileLicencia')">
+                  Cambiar
+                  <i class="ml-1 fa-solid fa-arrows-rotate"></i>
+                </button>
+                <input id="fileLicencia" class="mt-2" style="display:none" type="file"(change)="handleUploaderEvent($event, 'doclicencia')" accept="application/pdf">
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-4 mx-0" style="background-color: black;">
+        <div class="row" style="row-gap: 10px;">
+          <span style="margin-bottom: 5px;" class="col-md-12">Otros Documentos</span>
+          <div class="col-6 col-md-3" *ngFor="let file of otherFiles; index as i">
+            <div class="d-flex flex-column" style="gap: 10px">
+              <div style="position: relative;">
+                <pdf-viewer (click)="openFile(file)" *ngIf="file"
+                  [src]="environment.apiUrl + file.xrutadocumento"
+                  [fit-to-page]="true"
+                  [original-size]="false"
+                  [page]="1"
+                  [show-all]="false"
+                  [autoresize]="true"
+                  class="thumbnail_pdf open_file"
+                  style="height: 0px; padding-bottom: 100%;"
+                >
+                  
+                </pdf-viewer>
+                <small *ngIf="file" (click)="openFile(file)" class="open_file" style="z-index: 12; position: absolute; bottom: 2px; right: 7px; font-size: 9px; color: white;">{{file.name}}</small>
+                <div *ngIf="file" (click)="openFile(file)" class="thumb-border open_file"></div>
+              </div>
+              <input type="file" style="display: none;" [id]="'fileOther'+(i+1)" (change)="handleUploaderFileEvent($event,'otrodocumento','otrodocumento'+(i+1))" accept="application/pdf">
+              <button style="height: fit-content;" class="btn btn-primary m-0" (click)="addFile('fileOther'+(i+1))">
+                Cambiar
+                <i class="ml-1 fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mt-4 col-md-12">
+            <div class="user-form-field d-flex flex-column align-items-start w-100">
+              <button style="height: fit-content;" class="btn btn-primary m-0 w-100" (click)="addFile('fileOthers')">
+                Agregar
+                <i class="ml-1 fa-solid fa-plus"></i>
+              </button>
+              <input id="fileOthers" style="display: none;" type="file" (change)="handleUploadersEvent($event, 'otrodocumento')" accept="application/pdf" multiple>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<div class="panel-header">
+  <div class="header text-center">
+    <h2 class="title">{{title}}</h2>
+
+  </div>
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-md-12 card">
+      <div class="row py-4">
+        <div class="col-md-6 tracking-item-container tr-1">
+
+          <mat-card style="background-color: #d40c0c2e;" class="card-events" id="first-late-card">
+            <div>
+              <mat-card-subtitle class="d-flex justify-content-between">
+                <span *ngIf="lateTracking">N° #{{lateTracking.cseguimientonotificacion}}</span>
+                <span class="tracking-square square-red"></span>
+              </mat-card-subtitle>
+              <mat-card-title style="line-height: 30px;"><b>SEGUIMIENTO VENCIDO</b></mat-card-title>
+              <mat-card-content>
+                <p *ngIf="!lateTracking" class="mt-4">No hay notificaciones vencidas por el momento</p>
+                <p *ngIf="lateTracking"><small><b>{{ lateTracking.xfseguimientonotificacion }}</b></small></p>
+                <p *ngIf="lateTracking">
+                  <b>{{ lateTracking.xtiposeguimiento }}</b>
+                </p>
+                <p *ngIf="lateTracking"><small>- {{ lateTracking.xmotivoseguimiento }} (
+                  <span *ngIf="lateTracking.xobservacion.length > 0">{{lateTracking.xobservacion.toLowerCase()}}</span>
+                  <span *ngIf="lateTracking.xobservacion.length <= 0">No hay observaciones en este seguimiento</span>
+                )</small></p>
+              </mat-card-content>
+            </div>
+            <div>
+              <mat-divider *ngIf="lateTracking" inset></mat-divider>
+              <mat-card-actions  style="gap: 5px;" class=" d-flex flex-wrap mb-0">
+                <button *ngIf="lateTracking" class="m-0 w-100 btn square-red" (click)="showItem(lateTracking.cnotificacion)" mat-button>DETALLES</button>
+                <button *ngIf="lateTracking" class="m-0 w-100 btn" (click)="showAll(1)" mat-button>MOSTRAR TODOS</button>
+              </mat-card-actions>
+              <mat-card-footer>
+                <mat-progress-bar class="square-red" mode="determinate" value="100"></mat-progress-bar>
+              </mat-card-footer>
+            </div>
+          </mat-card>
+
+        </div>
+        <div class="col-md-6 d-flex">
+          <div class="d-flex flex-wrap">
+            <div class="tracking-item-container tr-2">
+              <mat-card style="background-color: #fff01e42;" class="card-events w-100" id="first-today-card">
+                <div>
+                  <mat-card-subtitle class="d-flex justify-content-between">
+                    <span *ngIf="dailyTracking">N° #{{dailyTracking.cseguimientonotificacion}}</span>
+                    <span class="tracking-square square-yellow"></span>
+                  </mat-card-subtitle>
+                  <mat-card-title class="no-weight-md" style="line-height: 30px;"><b>SEGUIMIENTO PARA HOY</b></mat-card-title>
+                  <mat-card-content>
+                    <p *ngIf="!dailyTracking" class="mt-4">No hay notificaciones del dia por el momento</p>
+                    <p *ngIf="dailyTracking" class="d-md-none"><small><b>{{ dailyTracking.xfseguimientonotificacion }}</b></small></p>
+                    <p *ngIf="dailyTracking"><b>{{ dailyTracking.xtiposeguimiento }}</b></p>
+                    <p *ngIf="dailyTracking" class="d-md-none">
+                      <small>- {{ dailyTracking.xmotivoseguimiento }} (
+                        <span *ngIf="dailyTracking.xobservacion.length > 0">{{dailyTracking.xobservacion.toLowerCase()}}</span>
+                        <span *ngIf="dailyTracking.xobservacion.length <= 0">No hay observaciones en este seguimiento</span>
+                        )</small>
+                    </p>
+                  </mat-card-content>
+                </div>
+                <div>
+                  <mat-divider *ngIf="dailyTracking" class="d-md-none" inset></mat-divider>
+                  <mat-card-actions style="gap: 5px;" class=" d-flex flex-wrap mb-0">
+                    <button *ngIf="dailyTracking" class="m-0 w-100 btn square-yellow" (click)="showItem(dailyTracking.cnotificacion)" mat-button>DETALLES</button>
+                    <button *ngIf="dailyTracking" class="m-0 w-100 btn" (click)="showAll(2)" mat-button>MOSTRAR TODOS</button>
+                  </mat-card-actions>
+                  <mat-card-footer>
+                    <mat-progress-bar class="square-yellow" mode="determinate" value="100"></mat-progress-bar>
+                  </mat-card-footer>
+                </div>
+              </mat-card>
+
+            </div>
+            <div class="tracking-item-container tr-3">
+
+              <mat-card style="background-color: #24ad244f;" class="card-events" id="first-pending-card" >
+                <div>
+                  <mat-card-subtitle class="d-flex justify-content-between">
+                    <span class="weight-bold-md" *ngIf="pendingTracking">N° #{{pendingTracking.cseguimientonotificacion}}</span>
+                    <span class="tracking-square square-green"></span>
+                  </mat-card-subtitle>
+                  <mat-card-title class="d-md-none" style="line-height: 30px;"><b>SEGUIMIENTO POR VENCER</b></mat-card-title>
+                  <mat-card-content>
+                    <p *ngIf="!pendingTracking" class="mt-4">No hay notificaciones pendientes por el momento</p>
+                    <p class="d-md-none" *ngIf="pendingTracking"><small><b>{{ pendingTracking.xfseguimientonotificacion }}</b></small></p>
+                    <p *ngIf="pendingTracking"><b>{{ pendingTracking.xtiposeguimiento }}</b></p>
+                    <p class="d-md-none" *ngIf="pendingTracking">
+                      <small>- {{ pendingTracking.xmotivoseguimiento }} (
+                        <span *ngIf="pendingTracking.xobservacion.length > 0">{{pendingTracking.xobservacion.toLowerCase()}}</span>
+                        <span *ngIf="pendingTracking.xobservacion <= 0">No hay observaciones en este seguimiento</span>
+                      )</small>
+                    </p>
+                  </mat-card-content>
+                </div>
+                <div>
+                  <mat-divider *ngIf="pendingTracking" class="d-md-none" inset></mat-divider>
+                  <mat-card-actions style="gap: 5px;" class=" d-flex flex-wrap mb-0">
+                    <button *ngIf="pendingTracking" class="m-0 w-100 btn square-green" (click)="showItem(pendingTracking.cnotificacion)" mat-button>DETALLES</button>
+                    <button *ngIf="pendingTracking" class="m-0 w-100 btn" (click)="showAll(3)" mat-button>MOSTRAR</button>
+                  </mat-card-actions>
+                  <mat-card-footer>
+                    <mat-progress-bar class="square-green" mode="determinate" value="100"></mat-progress-bar>
+                  </mat-card-footer>
+                </div>
+              </mat-card>
+
+            </div>
+            <div class="tracking-item-container tr-4">
+              <mat-card style="background-color: #0000000f;" class="card-events" id="first-pending-card">
+                <mat-card-content style="text-align: center; margin-bottom: 0px; height: 100%;">
+                  <button (click)="showAll()" class="p-0 w-100 h-100 d-flex justify-content-center align-items-center" mat-button>
+                    <span style="gap: 5px;" class="d-flex justify-content-center align-items-center flex-column">
+
+                      <mat-icon style="height: 70px; width: 70px; font-size: 75px;">table_view</mat-icon>
+                      <span><b>VER TODOS</b></span>
+                    </span>
+                  </button>
+                </mat-card-content>
+                <mat-card-footer>
+                  <mat-progress-bar mode="determinate" value="0"></mat-progress-bar>
+                </mat-card-footer>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

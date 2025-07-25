@@ -1,0 +1,20 @@
+.uploader-cfg {
+  --ctx-name: "uploader";
+
+  /* DO NOT FORGET TO USE YOUR OWN PUBLIC KEY */
+  --cfg-pubkey: "demopublickey";
+}
+.width-50-desk {
+  width: 50%;
+  margin: auto;
+}
+.open_file {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 478px) {
+  .width-50-desk {
+    width: 100%;
+    margin: 0;
+  }
+}
